@@ -5,9 +5,17 @@
 \usepackage{hyperref}
 \geometry{a4paper, margin=1in}
 
-\title{Relazione per il corso di Basi di Dati \\ \textbf{Progetto di una base di dati per il monitoraggio e l'analisi delle performance atletiche}}
-\author{Federico Locatelli}
-\date{A.A. 2025/2026}
+% --- INIZIO FRONTESPIZIO ---
+\title{
+    Relazione per il corso di Basi di Dati \\
+    A.A. 2025/2026 \\
+    \textbf{Progetto di una base di dati per il monitoraggio e l'analisi delle performance atletiche}
+}
+\author{
+    Federico Locatelli \href{mailto:federico.locatelli3@studio.unibo.it}{federico.locatelli3@studio.unibo.it} \\
+    Matricola: 0001160887
+}
+\date{}
 
 \begin{document}
 
@@ -19,27 +27,24 @@
 \chapter{Analisi dei requisiti}
 
 \section{Requisiti in linguaggio naturale}
-L'obiettivo del progetto è la realizzazione di una base di dati per la gestione completa delle routine di allenamento e il monitoraggio costante dei progressi fisici di un atleta. Il sistema deve permettere agli utenti di registrarsi inserendo nome, cognome, email (identificatore univoco), password e data di nascita. 
+Si vuole realizzare una base di dati per la gestione professionale delle routine di allenamento e il monitoraggio analitico delle performance atletiche. Il sistema è progettato per atleti che necessitano di tracciare con precisione millimetrica la propria progressione, memorizzando dati relativi agli utenti, alla programmazione teorica e all'esecuzione pratica delle sessioni.
 
-Ogni utente può configurare le proprie schede di allenamento, le quali rappresentano la programmazione teorica da seguire. Una scheda è identificata da un nome (es. ``Powerbuilding Split'') e suddivisa in diverse giornate (es. Giorno A, Giorno B), ciascuna con un elenco prefissato di esercizi. 
+\textbf{Gestione Atleti e Programmazione}:
+Per ogni \textbf{atleta} (utente) si memorizzano: il nome, il cognome, l'email (univoca), la password e la data di nascita. Ciascun atleta può creare e gestire molteplici \textbf{schede di allenamento}, le quali rappresentano la struttura teorica della programmazione (es. "Powerbuilding Split"). Ogni scheda è suddivisa in diverse \textbf{giornate} (es. Giorno A, Giorno B), ciascuna caratterizzata da un elenco prefissato di esercizi e un volume target.
 
-Il sistema si appoggia a un catalogo globale di esercizi. Per ogni esercizio si memorizzano: nome tecnico, gruppo muscolare primario (es. Pettorali, Dorsali) e tipologia di attrezzatura (pesi liberi, cavi, o macchinari specifici come i Panatta). 
+\textbf{Catalogo Esercizi e Attrezzatura}:
+Il database deve immagazzinare informazioni relative a un vasto catalogo di \textbf{esercizi}. Per ogni esercizio si memorizzano: il nome tecnico (univoco), il \textbf{gruppo muscolare} primario (es. Pettorali, Dorsali) e la tipologia di \textbf{attrezzatura} richiesta (es. Bilanciere, Manubri, Cavi o Macchinari specifici come Panatta). Ogni attrezzatura conferisce specifiche modalità di esecuzione che influenzano la stabilità e la dinamica del carico.
 
-L'elemento dinamico del sistema è la sessione di allenamento, ovvero l'evento reale svoltosi in una determinata data. Durante la sessione, l'atleta esegue una delle sue giornate programmate. Per ogni esercizio, l'utente traccia le singole serie effettuate. Per ogni serie si registrano: carichi (KG), numero di ripetizioni, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
-
-\section{Estrazione dei Concetti Principali}
-Sulla base dei requisiti, si individuano le seguenti entità che andranno a formare lo schema concettuale:
-
+\textbf{Sessioni e Tracciamento Performance}:
+Il fulcro del sistema è il tracciamento delle \textbf{sessioni di allenamento}, ovvero l'attuazione reale di una scheda in una data precisa. Durante una sessione, l'atleta registra le \textbf{serie} (set) effettuate per ogni esercizio. Per ogni singola serie è necessario memorizzare:
 \begin{itemize}
-    \item \textbf{UTENTE}: l'atleta che gestisce il profilo e i propri dati personali.
-    \item \textbf{SCHEDA}: la programmazione teorica o il piano di allenamento.
-    \item \textbf{ESERCIZIO}: il movimento tecnico selezionabile dal catalogo.
-    \item \textbf{SESSIONE}: l'evento temporale che registra un allenamento svolto.
-    \item \textbf{SERIE}: il record puntuale di carico e ripetizioni per ogni esercizio.
-    \item \textbf{ATTREZZATURA}: lo strumento fisico necessario all'esecuzione.
+    \item Il carico sollevato espresso in chilogrammi (KG).
+    \item Il numero di ripetizioni completate (Reps).
+    \item L'eventuale utilizzo di \textbf{zavorre} (sovraccarichi esterni).
+    \item Il raggiungimento del \textbf{cedimento muscolare} (failure).
 \end{itemize}
+Nel caso in cui un atleta sia impossibilitato a eseguire un esercizio previsto (per assenza di attrezzatura o infortunio), il sistema deve permettere la registrazione dell'omissione o la sostituzione con un esercizio variante. Per ogni partecipante alla sessione si può inoltre memorizzare un'immagine che rappresenti la forma fisica attuale.
 
-\chapter{Progettazione concettuale}
-% In questa sezione verranno inseriti i diagrammi ER e la descrizione delle relazioni.
+Infine, per ciascun allenamento si registra lo storico completo dei dati, permettendo al sistema di calcolare metriche avanzate come il volume totale di lavoro (Serie x Reps x KG) e la media dei carichi sollevati nel corso delle diverse campagne di allenamento.
 
 \end{document}
