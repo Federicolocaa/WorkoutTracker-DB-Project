@@ -47,4 +47,15 @@ Nel caso in cui un atleta sia impossibilitato a eseguire un esercizio previsto (
 
 Infine, per ciascun allenamento si registra lo storico completo dei dati, permettendo al sistema di calcolare metriche avanzate come il volume totale di lavoro (Serie x Reps x KG) e la media dei carichi sollevati nel corso delle diverse campagne di allenamento.
 
+\section{Estrazione dei Concetti Principali}
+Di seguito evidenziamo i concetti principali estratti dalla richiesta del committente, individuando le entità che andranno a formare lo schema concettuale.
+
+Si vuole realizzare una base di dati per la gestione professionale di routine di allenamento e performance atletiche. Pertanto, il database dovrà immagazzinare informazioni relative agli atleti, al catalogo tecnico degli esercizi e alle sessioni di allenamento. Per ogni \textbf{atleta} si memorizzano: il nome, il cognome, l'email (univoca), la password e la data di nascita. Ciascun atleta gestisce la propria programmazione attraverso le \textbf{schede di allenamento}, le quali sono suddivise in \textbf{giornate} specifiche (es. Giorno A, Giorno B).
+
+Il database deve gestire un catalogo di \textbf{esercizi}. Per ogni esercizio si memorizzano: il nome tecnico (identificativo), il gruppo muscolare primario coinvolto e la tipologia di \textbf{attrezzatura} richiesta (pesi liberi, cavi o macchinari specifici come i Panatta). Ogni tipologia di attrezzatura definisce i vincoli di esecuzione dell'esercizio.
+
+Il vero fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'evento reale in cui l'atleta esegue una specifica giornata della sua scheda. Una sessione si svolge in una data precisa e registra le performance effettive. Durante la sessione, per ogni esercizio previsto, l'atleta registra lo storico delle \textbf{serie} (set), descrivendo i dettagli di ogni singola esecuzione: il carico sollevato in KG, il numero di ripetizioni completate, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
+
+In caso di impossibilità temporanea a eseguire un esercizio programmato, l'atleta può registrare una variante o l'omissione della serie; tale evento deve essere memorizzato per non alterare le medie statistiche. Per ogni atleta, si può inoltre memorizzare un'immagine che ne rappresenti lo stato della forma fisica attuale. Il database deve infine permettere di calcolare la media dei carichi e il volume totale di lavoro nel corso delle diverse campagne di allenamento (mesi o cicli di forza).
+
 \end{document}
