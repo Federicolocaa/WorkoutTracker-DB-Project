@@ -5,3 +5,8 @@ bin/
 .settings/
 .project
 .classpath
+*.aux
+*.log
+*.toc
+*.synctex.gz
+*.out

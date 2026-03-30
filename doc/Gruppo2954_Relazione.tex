@@ -1,0 +1,45 @@
+\documentclass[12pt]{report}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{a4paper, margin=1in}
+
+\title{Relazione per il corso di Basi di Dati \\ \textbf{Progetto di una base di dati per il monitoraggio e l'analisi delle performance atletiche}}
+\author{Federico Locatelli}
+\date{A.A. 2025/2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents 
+\newpage
+
+\chapter{Analisi dei requisiti}
+
+\section{Requisiti in linguaggio naturale}
+L'obiettivo del progetto è la realizzazione di una base di dati per la gestione completa delle routine di allenamento e il monitoraggio costante dei progressi fisici di un atleta. Il sistema deve permettere agli utenti di registrarsi inserendo nome, cognome, email (identificatore univoco), password e data di nascita. 
+
+Ogni utente può configurare le proprie schede di allenamento, le quali rappresentano la programmazione teorica da seguire. Una scheda è identificata da un nome (es. ``Powerbuilding Split'') e suddivisa in diverse giornate (es. Giorno A, Giorno B), ciascuna con un elenco prefissato di esercizi. 
+
+Il sistema si appoggia a un catalogo globale di esercizi. Per ogni esercizio si memorizzano: nome tecnico, gruppo muscolare primario (es. Pettorali, Dorsali) e tipologia di attrezzatura (pesi liberi, cavi, o macchinari specifici come i Panatta). 
+
+L'elemento dinamico del sistema è la sessione di allenamento, ovvero l'evento reale svoltosi in una determinata data. Durante la sessione, l'atleta esegue una delle sue giornate programmate. Per ogni esercizio, l'utente traccia le singole serie effettuate. Per ogni serie si registrano: carichi (KG), numero di ripetizioni, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
+
+\section{Estrazione dei Concetti Principali}
+Sulla base dei requisiti, si individuano le seguenti entità che andranno a formare lo schema concettuale:
+
+\begin{itemize}
+    \item \textbf{UTENTE}: l'atleta che gestisce il profilo e i propri dati personali.
+    \item \textbf{SCHEDA}: la programmazione teorica o il piano di allenamento.
+    \item \textbf{ESERCIZIO}: il movimento tecnico selezionabile dal catalogo.
+    \item \textbf{SESSIONE}: l'evento temporale che registra un allenamento svolto.
+    \item \textbf{SERIE}: il record puntuale di carico e ripetizioni per ogni esercizio.
+    \item \textbf{ATTREZZATURA}: lo strumento fisico necessario all'esecuzione.
+\end{itemize}
+
+\chapter{Progettazione concettuale}
+% In questa sezione verranno inseriti i diagrammi ER e la descrizione delle relazioni.
+
+\end{document}
