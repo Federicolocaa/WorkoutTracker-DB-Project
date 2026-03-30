@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{hyperref}
+\usepackage{float}
 \geometry{a4paper, margin=1in}
 
 % --- INIZIO FRONTESPIZIO ---
@@ -57,5 +58,41 @@ Il database deve gestire un catalogo di \textbf{esercizi}. Per ogni esercizio si
 Il vero fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'evento reale in cui l'atleta esegue una specifica giornata della sua scheda. Una sessione si svolge in una data precisa e registra le performance effettive. Durante la sessione, per ogni esercizio previsto, l'atleta registra lo storico delle \textbf{serie} (set), descrivendo i dettagli di ogni singola esecuzione: il carico sollevato in KG, il numero di ripetizioni completate, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
 
 In caso di impossibilità temporanea a eseguire un esercizio programmato, l'atleta può registrare una variante o l'omissione della serie; tale evento deve essere memorizzato per non alterare le medie statistiche. Per ogni atleta, si può inoltre memorizzare un'immagine che ne rappresenti lo stato della forma fisica attuale. Il database deve infine permettere di calcolare la media dei carichi e il volume totale di lavoro nel corso delle diverse campagne di allenamento (mesi o cicli di forza).
+
+\chapter{Progettazione concettuale}
+Lo schema finale, data l'analisi prima effettuata, si avvarrà delle seguenti entità e relazioni:
+
+\begin{table}[!ht] 
+\centering
+\small 
+\renewcommand{\arraystretch}{1.2} 
+\begin{tabular}{|l|c|p{8.5cm}|}
+\hline
+\textbf{Nome} & \textbf{Tipo} & \textbf{Descrizione} \\ \hline
+ATLETA & E & Rappresenta l'utente che utilizza il sistema, identificato dall'email. \\ \hline
+ATTREZZATURA & E & Rappresenta lo strumento fisico necessario per l'esercizio (es. Panatta). \\ \hline
+COMPOSIZIONE & R & Lega una scheda alle giornate di allenamento che la costituiscono. \\ \hline
+ESECUZIONE & R & Lega la sessione alla giornata di scheda effettivamente svolta. \\ \hline
+ESERCIZIO & E & Rappresenta il movimento tecnico presente nel catalogo globale. \\ \hline
+GIORNATA & E & Rappresenta la singola routine all'interno di una scheda (es. Giorno A). \\ \hline
+PIANIFICAZIONE & R & Lega una giornata agli esercizi previsti teoricamente. \\ \hline
+POSSESSO & R & Lega l'atleta alle proprie schede di allenamento personali. \\ \hline
+REQUISITO & R & Lega un esercizio all'attrezzatura necessaria per l'esecuzione. \\ \hline
+SCHEDA & E & Rappresenta il piano di allenamento teorico programmato. \\ \hline
+SERIE & E & Rappresenta il record di una singola esecuzione (carico e reps). \\ \hline
+SESSIONE & E & Rappresenta l'evento reale di allenamento in una data specifica. \\ \hline
+STORICO & R & Lega la sessione alle serie effettivamente completate. \\ \hline
+TIPOLOGIA & R & Lega la singola serie all'esercizio di riferimento nel catalogo. \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Schemi scheletro}
+Lo schema generale potrà essere diviso in vari ambiti di competenza strettamente interconnessi tra loro:
+\begin{enumerate}
+    \item \textbf{Gestione dell'Anagrafica e delle Schede}: riguarda il profilo dell'atleta e la creazione dei piani teorici.
+    \item \textbf{Catalogo Tecnico degli Esercizi}: definisce le caratteristiche dei movimenti e l'attrezzatura richiesta.
+    \item \textbf{Tracciamento delle Sessioni}: riguarda la registrazione degli allenamenti svoltisi in tempo reale.
+    \item \textbf{Analisi delle Performance (Serie)}: scende nel dettaglio dei carichi e delle ripetizioni per ogni esercizio.
+\end{enumerate}
 
 \end{document}
