@@ -4,6 +4,7 @@
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{graphicx}
 \geometry{a4paper, margin=1in}
 
 % --- INIZIO FRONTESPIZIO ---
@@ -94,5 +95,19 @@ Lo schema generale potrà essere diviso in vari ambiti di competenza strettament
     \item \textbf{Tracciamento delle Sessioni}: riguarda la registrazione degli allenamenti svoltisi in tempo reale.
     \item \textbf{Analisi delle Performance (Serie)}: scende nel dettaglio dei carichi e delle ripetizioni per ogni esercizio.
 \end{enumerate}
+
+\subsection{Gestione dell'Anagrafica e delle Schede}
+In questo primo schema scheletro viene analizzato il legame tra l'atleta e la sua programmazione a lungo termine. 
+
+L'entità \textbf{ATLETA} rappresenta il fulcro del sistema; per ogni utente è necessario memorizzare dati anagrafici e credenziali di accesso, garantendo l'univocità tramite l'indirizzo email. Ciascun atleta può creare e gestire una o più \textbf{SCHEDE}, che rappresentano i diversi cicli di allenamento (es. ``Fase di Massa'' o ``Rifinitura Estiva''). Il legame è definito dalla relazione \textbf{POSSESSO}, con cardinalità (1,N) lato Atleta, poiché un utente deve avere almeno un piano attivo per utilizzare le funzioni di monitoraggio del sistema.
+
+La \textbf{SCHEDA} a sua volta è un'entità complessa che non contiene direttamente gli esercizi, ma agisce come contenitore per le \textbf{GIORNATE} di allenamento. Questa scomposizione, definita dalla relazione \textbf{COMPOSIZIONE}, è fondamentale per permettere una programmazione flessibile (es. routine su 3 o 4 giorni a settimana). Ogni giornata rappresenta un'unità logica a cui verranno poi associati gli esercizi specifici nelle fasi successive della progettazione.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/2.1.1drawio.png}
+    \caption{Schema scheletro: Anagrafica e Schede}
+\end{figure}
 
 \end{document}
