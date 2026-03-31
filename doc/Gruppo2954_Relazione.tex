@@ -157,4 +157,17 @@ Per elevare la complessità del modello, sono stati introdotti due concetti avan
     \caption{Schema scheletro: Catalogo Tecnico e Relazioni Ricorsive}
 \end{figure}
 
+\subsection{Pianificazione Teorica e Corrispondenza Reale}
+In questo ambito viene modellata la transizione dalla programmazione astratta all'attuazione pratica dell'allenamento. Si distingue tra ciò che l'atleta "dovrebbe" fare e ciò che "effettivamente" accade in sala.
+
+Il cuore di questo modulo è la relazione \textbf{PIANIFICAZIONE} tra \textbf{GIORNATA} ed \textbf{ESERCIZIO}. Trattandosi di una relazione molti-a-molti ($N:M$), essa ospita gli attributi che definiscono il volume target: \textbf{ordine} di esecuzione, \textbf{serieTarget} e \textbf{repsTarget}. Questa scelta progettuale permette di riutilizzare lo stesso esercizio in diverse giornate con parametri differenti.
+
+L'entità \textbf{SESSIONE} rappresenta l'istanza reale dell'allenamento. Essa è legata alla \textbf{GIORNATA} tramite la relazione \textbf{ESECUZIONE} ($1:1$ lato sessione): ogni sessione è l'attuazione di una specifica routine programmata. Per chiudere il ciclo di monitoraggio professionale, è stata introdotta l'entità \textbf{MESSAGGIO}, legata alla sessione tramite la relazione \textbf{FEEDBACK}. Questo permette al \textbf{COACH} di inviare commenti tecnici puntuali su una specifica prestazione, garantendo un'interazione asincrona ma contestualizzata.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/2.1.3_db.png}
+    \caption{Schema scheletro: Dalla Programmazione al Feedback Reale}
+\end{figure}
+
 \end{document}
