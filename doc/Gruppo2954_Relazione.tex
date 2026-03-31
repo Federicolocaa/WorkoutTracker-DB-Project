@@ -5,6 +5,8 @@
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{array}
 \geometry{a4paper, margin=1in}
 
 % --- INIZIO FRONTESPIZIO ---
@@ -29,13 +31,13 @@
 \chapter{Analisi dei requisiti}
 
 \section{Requisiti in linguaggio naturale}
-Si vuole realizzare una base di dati per la gestione professionale delle routine di allenamento e il monitoraggio analitico delle performance atletiche. Il sistema è progettato per atleti che necessitano di tracciare con precisione millimetrica la propria progressione, memorizzando dati relativi agli utenti, alla programmazione teorica e all'esecuzione pratica delle sessioni.
+Si vuole realizzare una base di dati per la gestione professionale delle routine di allenamento e il monitoraggio delle performance atletiche. Il sistema prevede due tipologie di utenti: gli \textbf{atleti}, che caricano i propri progressi, e i \textbf{coach}, che possono supervisionare il lavoro degli atleti assegnati.
 
-\textbf{Gestione Atleti e Programmazione}:
-Per ogni \textbf{atleta} (utente) si memorizzano: il nome, il cognome, l'email (univoca), la password e la data di nascita. Ciascun atleta può creare e gestire molteplici \textbf{schede di allenamento}, le quali rappresentano la struttura teorica della programmazione (es. "Powerbuilding Split"). Ogni scheda è suddivisa in diverse \textbf{giornate} (es. Giorno A, Giorno B), ciascuna caratterizzata da un elenco prefissato di esercizi e un volume target.
+\textbf{Gestione Utenti e Supervisione}:
+Per ogni \textbf{utente} si memorizzano: nome, cognome, email (univoca) e password. Gli \textbf{atleti} aggiungono dati fisici (peso, altezza), mentre per i \textbf{coach} si tracciano le certificazioni. Un coach può seguire più atleti. L'atleta gestisce le proprie \textbf{schede di allenamento}, suddivise in \textbf{giornate} (es. Giorno A, Giorno B).
 
 \textbf{Catalogo Esercizi e Attrezzatura}:
-Il database deve immagazzinare informazioni relative a un vasto catalogo di \textbf{esercizi}. Per ogni esercizio si memorizzano: il nome tecnico (univoco), il \textbf{gruppo muscolare} primario (es. Pettorali, Dorsali) e la tipologia di \textbf{attrezzatura} richiesta (es. Bilanciere, Manubri, Cavi o Macchinari specifici come Panatta). Ogni attrezzatura conferisce specifiche modalità di esecuzione che influenzano la stabilità e la dinamica del carico.
+Il database deve immagazzinare informazioni relative a un vasto catalogo di \textbf{esercizi}, memorizzando per ciascuno il nome tecnico (univoco), una descrizione dettagliata e il \textbf{gruppo muscolare} primario coinvolto (es. Pettorali, Dorsali). Il sistema opera una distinzione tassonomica tra \textbf{esercizi liberi} (es. manubri o bilancieri) ed \textbf{esercizi guidati}, i quali richiedono obbligatoriamente il legame con una specifica \textbf{attrezzatura} (es. cavi o macchinari specifici come Panatta). Tale classificazione è fondamentale poiché ogni tipologia di attrezzo conferisce specifiche modalità di esecuzione che influenzano direttamente la stabilità, la biomeccanica del movimento e la dinamica del carico sollevato.
 
 \textbf{Sessioni e Tracciamento Performance}:
 Il fulcro del sistema è il tracciamento delle \textbf{sessioni di allenamento}, ovvero l'attuazione reale di una scheda in una data precisa. Durante una sessione, l'atleta registra le \textbf{serie} (set) effettuate per ogni esercizio. Per ogni singola serie è necessario memorizzare:
@@ -52,62 +54,107 @@ Infine, per ciascun allenamento si registra lo storico completo dei dati, permet
 \section{Estrazione dei Concetti Principali}
 Di seguito evidenziamo i concetti principali estratti dalla richiesta del committente, individuando le entità che andranno a formare lo schema concettuale.
 
-Si vuole realizzare una base di dati per la gestione professionale di routine di allenamento e performance atletiche. Pertanto, il database dovrà immagazzinare informazioni relative agli atleti, al catalogo tecnico degli esercizi e alle sessioni di allenamento. Per ogni \textbf{atleta} si memorizzano: il nome, il cognome, l'email (univoca), la password e la data di nascita. Ciascun atleta gestisce la propria programmazione attraverso le \textbf{schede di allenamento}, le quali sono suddivise in \textbf{giornate} specifiche (es. Giorno A, Giorno B).
+Il sistema è progettato per gestire professionalmente le routine di allenamento e l'analisi delle performance. Il database immagazzinerà informazioni relative a una gerarchia di \textbf{utenti}, al catalogo tecnico degli esercizi e alle sessioni di allenamento reali. L'identificatore univoco per l'accesso e la gestione dei profili è l'indirizzo email. Gli utenti si specializzano in \textbf{atleti}, dei quali si memorizzano dati anagrafici (nome, cognome, data di nascita) e biometrici (peso, altezza), e \textbf{coach}, responsabili della supervisione e della validazione dei programmi.
 
-Il database deve gestire un catalogo di \textbf{esercizi}. Per ogni esercizio si memorizzano: il nome tecnico (identificativo), il gruppo muscolare primario coinvolto e la tipologia di \textbf{attrezzatura} richiesta (pesi liberi, cavi o macchinari specifici come i Panatta). Ogni tipologia di attrezzatura definisce i vincoli di esecuzione dell'esercizio.
+Ogni atleta gestisce la propria programmazione attraverso le \textbf{schede di allenamento}, strutturate in diverse \textbf{giornate} specifiche (es. Giorno A, Giorno B) per garantire flessibilità nella frequenza settimanale. Il catalogo degli \textbf{esercizi} opera una distinzione tassonomica tra \textbf{esercizi liberi} (es. bilancieri) ed \textbf{esercizi guidati}. Questi ultimi presentano un legame obbligatorio con l'entità \textbf{attrezzatura} (es. macchinari Panatta o cavi), la quale definisce i vincoli biomeccanici e di stabilità dell'esecuzione.
 
-Il vero fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'evento reale in cui l'atleta esegue una specifica giornata della sua scheda. Una sessione si svolge in una data precisa e registra le performance effettive. Durante la sessione, per ogni esercizio previsto, l'atleta registra lo storico delle \textbf{serie} (set), descrivendo i dettagli di ogni singola esecuzione: il carico sollevato in KG, il numero di ripetizioni completate, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
+Il fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'istanza reale in cui l'atleta esegue una specifica giornata della sua scheda in una data precisa. Durante la sessione si registrano i dati atomici delle \textbf{serie} (set), descrivendo nel dettaglio il carico sollevato in KG, il numero di ripetizioni, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
 
-In caso di impossibilità temporanea a eseguire un esercizio programmato, l'atleta può registrare una variante o l'omissione della serie; tale evento deve essere memorizzato per non alterare le medie statistiche. Per ogni atleta, si può inoltre memorizzare un'immagine che ne rappresenti lo stato della forma fisica attuale. Il database deve infine permettere di calcolare la media dei carichi e il volume totale di lavoro nel corso delle diverse campagne di allenamento (mesi o cicli di forza).
+Il sistema deve inoltre gestire eccezioni come l'omissione di un esercizio o l'esecuzione di varianti, permettendo al contempo di associare immagini per il monitoraggio della forma fisica. Infine, la base di dati deve consentire l'estrazione di metriche aggregate, quali il volume totale di lavoro e la media dei carichi sollevati nel corso delle diverse campagne di allenamento.
 
 \chapter{Progettazione concettuale}
-Lo schema finale, data l'analisi prima effettuata, si avvarrà delle seguenti entità e relazioni:
 
-\begin{table}[!ht] 
-\centering
+Lo schema finale, sulla base dell'analisi effettuata nel capitolo precedente, si avvarrà delle seguenti entità e relazioni. La struttura è stata modellata per garantire scalabilità e precisione nel tracciamento sia della programmazione teorica che della performance reale.
+
+\renewcommand{\arraystretch}{1.5} 
 \small 
-\renewcommand{\arraystretch}{1.2} 
-\begin{tabular}{|l|c|p{8.5cm}|}
+
+\begin{longtable}{|l|c|>{\raggedright\arraybackslash}p{8.5cm}|}
 \hline
 \textbf{Nome} & \textbf{Tipo} & \textbf{Descrizione} \\ \hline
-ATLETA & E & Rappresenta l'utente che utilizza il sistema, identificato dall'email. \\ \hline
-ATTREZZATURA & E & Rappresenta lo strumento fisico necessario per l'esercizio (es. Panatta). \\ \hline
-COMPOSIZIONE & R & Lega una scheda alle giornate di allenamento che la costituiscono. \\ \hline
-ESECUZIONE & R & Lega la sessione alla giornata di scheda effettivamente svolta. \\ \hline
-ESERCIZIO & E & Rappresenta il movimento tecnico presente nel catalogo globale. \\ \hline
-GIORNATA & E & Rappresenta la singola routine all'interno di una scheda (es. Giorno A). \\ \hline
-PIANIFICAZIONE & R & Lega una giornata agli esercizi previsti teoricamente. \\ \hline
-POSSESSO & R & Lega l'atleta alle proprie schede di allenamento personali. \\ \hline
-REQUISITO & R & Lega un esercizio all'attrezzatura necessaria per l'esecuzione. \\ \hline
-SCHEDA & E & Rappresenta il piano di allenamento teorico programmato. \\ \hline
-SERIE & E & Rappresenta il record di una singola esecuzione (carico e reps). \\ \hline
-SESSIONE & E & Rappresenta l'evento reale di allenamento in una data specifica. \\ \hline
-STORICO & R & Lega la sessione alle serie effettivamente completate. \\ \hline
-TIPOLOGIA & R & Lega la singola serie all'esercizio di riferimento nel catalogo. \\ \hline
-\end{tabular}
-\end{table}
+\endfirsthead 
+
+\hline
+\textbf{Nome} & \textbf{Tipo} & \textbf{Descrizione} \\ \hline
+\endhead 
+
+UTENTE & E & Entità padre che rappresenta ogni soggetto registrato nel sistema. \\ \hline
+ATLETA & E & Specializzazione di Utente; gestisce dati biometrici e storici di allenamento. \\ \hline
+COACH & E & Specializzazione di Utente; supervisiona e valida la programmazione degli atleti. \\ \hline
+ATTREZZATURA & E & Insieme delle risorse fisiche (es. macchinari Panatta, pesi liberi). \\ \hline
+ESERCIZIO & E & Definizione tecnica e biomeccanica di un movimento del catalogo. \\ \hline
+LIBERO / GUIDATO & E & Sottotipi di Esercizio definiti dalla necessità di attrezzatura specifica. \\ \hline
+GIORNATA & E & Unità logica (es. Giorno A) che raggruppa una sequenza di esercizi. \\ \hline
+SCHEDA & E & Programma di allenamento complessivo a medio/lungo termine. \\ \hline
+SESSIONE & E & Istanza reale di un allenamento svoltosi in una specifica data. \\ \hline
+SERIE & E & Record atomico della performance (carico sollevato e ripetizioni). \\ \hline
+WARM-UP / WORKING & E & Sottotipi di Serie per distinguere lo scopo e l'intensità dello sforzo. \\ \hline
+GRUPPO MUSCOLARE & E & Distretti anatomici coinvolti (es. Pettorali, Quadricipiti). \\ \hline
+MISURAZIONE & E & Rilevazione periodica di parametri biometrici (peso, pliche, circonferenze). \\ \hline
+MESSAGGIO & E & Canale di comunicazione per il feedback tecnico tra Coach e Atleta. \\ \hline
+COMPOSIZIONE & R & Lega la Scheda alle singole Giornate di allenamento. \\ \hline
+ESECUZIONE & R & Lega la Sessione alla Giornata di scheda effettivamente svolta. \\ \hline
+PIANIFICAZIONE & R & Relazione $N:M$ tra Giornata ed Esercizio con target di volume teorici. \\ \hline
+POSSESSO & R & Lega l'Atleta alle proprie schede di allenamento personali. \\ \hline
+SUPERVISIONE & R & Lega un Coach agli Atleti che coordina professionalmente. \\ \hline
+REQUISITO & R & Lega un Esercizio Guidato all'Attrezzatura necessaria. \\ \hline
+STORICO & R & Lega la Sessione alle Serie prodotte durante l'allenamento. \\ \hline
+TIPOLOGIA & R & Lega la singola Serie all'Esercizio di riferimento nel catalogo. \\ \hline
+COINVOLGIMENTO & R & Relazione $N:M$ che specifica l'impatto di un esercizio sui muscoli. \\ \hline
+PROGRESSO & R & Lega l'Atleta alle proprie misurazioni biometriche temporali. \\ \hline
+FEEDBACK & R & Lega un Messaggio a una specifica sessione o misura biometrica. \\ \hline
+VARIANTE & R & Relazione ricorsiva che identifica esercizi sostitutivi (es. Panca vs Manubri). \\ \hline
+
+\end{longtable}
+\normalsize 
 
 \section{Schemi scheletro}
-Lo schema generale potrà essere diviso in vari ambiti di competenza strettamente interconnessi tra loro:
+Data la complessità del dominio, lo schema generale è stato decomposto in quattro ambiti di competenza modulari e interconnessi:
+
 \begin{enumerate}
-    \item \textbf{Gestione dell'Anagrafica e delle Schede}: riguarda il profilo dell'atleta e la creazione dei piani teorici.
-    \item \textbf{Catalogo Tecnico degli Esercizi}: definisce le caratteristiche dei movimenti e l'attrezzatura richiesta.
-    \item \textbf{Tracciamento delle Sessioni}: riguarda la registrazione degli allenamenti svoltisi in tempo reale.
-    \item \textbf{Analisi delle Performance (Serie)}: scende nel dettaglio dei carichi e delle ripetizioni per ogni esercizio.
+    \item \textbf{Gestione dell'Anagrafica, Gerarchie e Biometria}: analizza la profilazione degli utenti (Atleti e Coach) e il tracciamento dell'evoluzione fisica nel tempo.
+    \item \textbf{Catalogo Tecnico e Anatomia Muscolare}: definisce la libreria degli esercizi, la loro classificazione biomeccanica e il coinvolgimento dei distretti anatomici.
+    \item \textbf{Pianificazione Teorica e Corrispondenza Reale}: modella il passaggio dal piano d'allenamento astratto alla sessione pratica, includendo il feedback del Coach.
+    \item \textbf{Analisi Atomica della Performance}: si focalizza sulla modellazione della singola serie e sulla distinzione tra set di riscaldamento e allenanti.
 \end{enumerate}
 
-\subsection{Gestione dell'Anagrafica e delle Schede}
-In questo primo schema scheletro viene analizzato il legame tra l'atleta e la sua programmazione a lungo termine. 
+\subsection{Gestione dell'Anagrafica, Gerarchie e Biometria}
+In questo primo ambito viene modellata la struttura degli accessi e la profilazione avanzata degli utenti. Per garantire la scalabilità del sistema, si è scelto di implementare una \textbf{gerarchia di generalizzazione} (IS-A) a partire dall'entità padre \textbf{UTENTE}.
 
-L'entità \textbf{ATLETA} rappresenta il fulcro del sistema; per ogni utente è necessario memorizzare dati anagrafici e credenziali di accesso, garantendo l'univocità tramite l'indirizzo email. Ciascun atleta può creare e gestire una o più \textbf{SCHEDE}, che rappresentano i diversi cicli di allenamento (es. ``Fase di Massa'' o ``Rifinitura Estiva''). Il legame è definito dalla relazione \textbf{POSSESSO}, con cardinalità (1,N) lato Atleta, poiché un utente deve avere almeno un piano attivo per utilizzare le funzioni di monitoraggio del sistema.
+L'\textbf{UTENTE}, identificato univocamente dall'indirizzo email, contiene i dati comuni necessari all'autenticazione. La specializzazione si divide in due sottoclassi mutuamente esclusive:
+\begin{itemize}
+    \item \textbf{COACH}: rappresenta la figura professionale che gestisce la programmazione e fornisce feedback. Memorizza dati relativi alle certificazioni e alla specializzazione tecnica.
+    \item \textbf{ATLETA}: rappresenta l'utente fruitore del servizio, del quale si tracciano dati fisici di base (altezza, peso iniziale) e obiettivi.
+\end{itemize}
 
-La \textbf{SCHEDA} a sua volta è un'entità complessa che non contiene direttamente gli esercizi, ma agisce come contenitore per le \textbf{GIORNATE} di allenamento. Questa scomposizione, definita dalla relazione \textbf{COMPOSIZIONE}, è fondamentale per permettere una programmazione flessibile (es. routine su 3 o 4 giorni a settimana). Ogni giornata rappresenta un'unità logica a cui verranno poi associati gli esercizi specifici nelle fasi successive della progettazione.
-
+Il legame tra queste figure è definito dalla relazione \textbf{SUPERVISIONE} ($1:N$), che permette a un coach di coordinare molteplici atleti. Per monitorare l'evoluzione fisica, l'Atleta è legato all'entità \textbf{MISURAZIONE} tramite la relazione \textbf{PROGRESSO}: questa struttura consente di storicizzare parametri biometrici (peso, \% grasso) nel tempo. Infine, l'atleta gestisce i propri piani tramite la relazione \textbf{POSSESSO} con l'entità \textbf{SCHEDA}, la quale funge da contenitore gerarchico per le \textbf{GIORNATE} di allenamento teoriche via relazione di \textbf{COMPOSIZIONE}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{images/2.1.1drawio.png}
-    \caption{Schema scheletro: Anagrafica e Schede}
+    \includegraphics[width=0.7\textwidth]{images/2.1.1_db.png}
+    \caption{Schema scheletro: Anagrafica, Gerarchia Utenti e Biometria}
+\end{figure}
+
+
+\subsection{Catalogo Tecnico e Anatomia Muscolare}
+In questo ambito viene modellata la libreria statica degli esercizi e la loro classificazione biomeccanica. L'obiettivo è duplice: mappare le necessità logistiche (attrezzatura) e l'impatto anatomico (gruppi muscolari).
+
+L'entità \textbf{ESERCIZIO} funge da super-classe per una gerarchia che distingue tra:
+\begin{itemize}
+    \item \textbf{ESERCIZIO LIBERO}: movimenti che non richiedono vincoli meccanici (es. manubri, bilancieri).
+    \item \textbf{ESERCIZIO GUIDATO}: movimenti vincolati a una specifica \textbf{ATTREZZATURA} (relazione \textbf{REQUISITO}), fondamentale per mappare l'uso di macchinari specifici come quelli a marchio Panatta/TechnoGym.
+\end{itemize}
+
+Per elevare la complessità del modello, sono stati introdotti due concetti avanzati:
+\begin{enumerate}
+    \item \textbf{COINVOLGIMENTO}: una relazione $N:M$ tra Esercizio e \textbf{GRUPPO MUSCOLARE}. Un singolo esercizio (es. Squat) può coinvolgere più distretti (Quadricipiti, Glutei, Core) con ruoli differenti (primario o sinergico).
+    \item \textbf{VARIANTE}: una relazione ricorsiva sull'entità Esercizio. Questa permette al sistema di suggerire alternative in caso di indisponibilità di un attrezzo o necessità di variare lo stimolo (es. Panca Piana sostituibile con Panca Inclinata o Dumbbell Press).
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/2.1.2_db.png}
+    \caption{Schema scheletro: Catalogo Tecnico e Relazioni Ricorsive}
 \end{figure}
 
 \end{document}
