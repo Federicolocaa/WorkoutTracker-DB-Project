@@ -16,7 +16,7 @@
     \textbf{Progetto di una base di dati per il monitoraggio e l'analisi delle performance atletiche}
 }
 \author{
-    Federico Locatelli \href{mailto:federico.locatelli3@studio.unibo.it}{federico.locatelli3@studio.unibo.it} \\
+    Federico Locatelli - \href{mailto:federico.locatelli3@studio.unibo.it}{federico.locatelli3@studio.unibo.it} \\
     Matricola: 0001160887
 }
 \date{}
@@ -104,6 +104,7 @@ COINVOLGIMENTO & R & Relazione $N:M$ che specifica l'impatto di un esercizio sui
 PROGRESSO & R & Lega l'Atleta alle proprie misurazioni biometriche temporali. \\ \hline
 FEEDBACK & R & Lega un Messaggio a una specifica sessione o misura biometrica. \\ \hline
 VARIANTE & R & Relazione ricorsiva che identifica esercizi sostitutivi (es. Panca vs Manubri). \\ \hline
+AUTORE & R & Lega il Coach al Messaggio inviato come feedback tecnico. \\ \hline
 
 \end{longtable}
 \normalsize 
@@ -131,7 +132,7 @@ Il legame tra queste figure è definito dalla relazione \textbf{SUPERVISIONE} ($
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/2.1.1_db.png}
+    \includegraphics[width=0.6\textwidth]{images/2.1.1_db.png}
     \caption{Schema scheletro: Anagrafica, Gerarchia Utenti e Biometria}
 \end{figure}
 
@@ -168,6 +169,23 @@ L'entità \textbf{SESSIONE} rappresenta l'istanza reale dell'allenamento. Essa �
     \centering
     \includegraphics[width=1\textwidth]{images/2.1.3_db.png}
     \caption{Schema scheletro: Dalla Programmazione al Feedback Reale}
+\end{figure}
+
+\subsection{Analisi Atomica della Performance}
+L'ultimo ambito di competenza riguarda la modellazione del dato atomico: la singola serie eseguita. In questa fase si analizza il dettaglio prestativo che permette al sistema di generare statistiche avanzate.
+
+L'entità \textbf{SERIE} è stata modellata come fulcro di una \textbf{gerarchia di specializzazione} per distinguere la natura dello sforzo:
+\begin{itemize}
+    \item \textbf{WARM-UP}: serie di riscaldamento, fondamentali per il tracciamento del volume totale ma da escludere dal calcolo dei record personali (PR).
+    \item \textbf{WORKING SET}: serie allenanti effettive, dove vengono monitorati attributi critici come il raggiungimento del \textbf{cedimento muscolare} (failure) e l'uso di \textbf{zavorre}.
+\end{itemize}
+
+La serie è legata alla \textbf{SESSIONE} tramite la relazione \textbf{STORICO} ($1:N$): ogni allenamento reale è composto da una sequenza di serie. Infine, la relazione \textbf{TIPOLOGIA} ($N:1$) con l'entità \textbf{ESERCIZIO} chiude il cerchio logico, permettendo di associare ogni singola esecuzione (es. 100kg x 8 reps) al movimento tecnico corrispondente nel catalogo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/2.1.4_db.png}
+    \caption{Schema scheletro: Modellazione atomica delle Serie e Storico}
 \end{figure}
 
 \end{document}
