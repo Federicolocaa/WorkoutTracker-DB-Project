@@ -205,4 +205,63 @@ L'integrazione ruota attorno a due pilastri: l'entità \textbf{ATLETA}, che coor
 \end{landscape}
 \newpage
 
+\chapter{Progettazione logica}
+L'obiettivo della progettazione logica è la traduzione dello schema concettuale in un modello relazionale efficiente. In questa fase si analizzano i volumi dei dati e le frequenze delle operazioni per ottimizzare le prestazioni della base di dati.
+
+\section{Stima del volume dei dati}
+Si fornisce di seguito una tabella riportante il numero medio stimato di istanze per ogni entità (E) e associazione (R) dello schema concettuale presentato al paragrafo 2.2. Le stime considerano un orizzonte temporale di un anno di utilizzo attivo del sistema per una palestra di medie dimensioni.
+
+\begin{longtable}{|l|c|r|}
+\hline
+\textbf{NOME} & \textbf{TIPO} & \textbf{VOLUME DEI DATI} \\ \hline
+\endhead
+UTENTE & E & 110 \\ \hline
+ATLETA & E & 100 \\ \hline
+COACH & E & 10 \\ \hline
+ATTREZZATURA & E & 80 \\ \hline
+ESERCIZIO & E & 250 \\ \hline
+GRUPPO MUSCOLARE & E & 12 \\ \hline
+SCHEDA & E & 350 \\ \hline
+GIORNATA & E & 1.100 \\ \hline
+SESSIONE & E & 12.000 \\ \hline
+SERIE & E & 420.000 \\ \hline
+MISURAZIONE & E & 2.500 \\ \hline
+MESSAGGIO & E & 5.000 \\ \hline
+SUPERVISIONE & R & 100 \\ \hline
+PROGRESSO & R & 2.500 \\ \hline
+POSSESSO & R & 350 \\ \hline
+COMPOSIZIONE & R & 1.100 \\ \hline
+ESECUZIONE & R & 12.000 \\ \hline
+PIANIFICAZIONE & R & 10.000 \\ \hline
+REQUISITO & R & 150 \\ \hline
+STORICO & R & 420.000 \\ \hline
+TIPOLOGIA & R & 420.000 \\ \hline
+COINVOLGIMENTO & R & 600 \\ \hline
+FEEDBACK & R & 5.000 \\ \hline
+VARIANTE & R & 150 \\ \hline
+AUTORE & R & 5.000 \\ \hline
+\end{longtable}
+
+\section{Descrizione delle operazioni principali e stima della loro frequenza}
+Viene presentato l'elenco delle 13 operazioni principali previste per l'interazione con la base di dati, classificate per frequenza d'uso giornaliera o settimanale.
+
+\begin{longtable}{|l|p{9cm}|l|}
+\hline
+\textbf{Codice} & \textbf{Operazione} & \textbf{Frequenza} \\ \hline
+\endhead
+1 & Registrazione di un nuovo profilo atleta & 2/settimana \\ \hline
+2 & Creazione di una nuova scheda di allenamento & 10/settimana \\ \hline
+3 & Inserimento di una nuova sessione di allenamento & 40/giorno \\ \hline
+4 & Registrazione dei dati di una singola serie (KG, Reps, Cedimento) & 1.500/giorno \\ \hline
+5 & Visualizzazione dello storico carichi e record personali (PR) & 50/giorno \\ \hline
+6 & Inserimento di una misurazione biometrica (peso, bodyfat) & 10/giorno \\ \hline
+7 & Invio di un messaggio di feedback tecnico dal coach & 20/giorno \\ \hline
+8 & Visualizzazione della dashboard atleti per un coach & 15/giorno \\ \hline
+9 & Ricerca di esercizi varianti in base alla disponibilità logistica & 10/giorno \\ \hline
+10 & Verifica del requisito di attrezzatura per un esercizio guidato & 30/giorno \\ \hline
+11 & Aggiornamento degli obiettivi periodici dell'atleta & 5/mese \\ \hline
+12 & Generazione report grafico dell'andamento biometrico & 15/giorno \\ \hline
+13 & Filtro degli esercizi per coinvolgimento gruppo muscolare & 10/giorno \\ \hline
+\end{longtable}
+
 \end{document}
