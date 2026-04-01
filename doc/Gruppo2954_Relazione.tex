@@ -264,4 +264,48 @@ Viene presentato l'elenco delle 13 operazioni principali previste per l'interazi
 13 & Filtro degli esercizi per coinvolgimento gruppo muscolare & 10/giorno \\ \hline
 \end{longtable}
 
+\section{Schemi di navigazione e tabelle degli accessi}
+Di seguito riportiamo le tabelle degli accessi per le operazioni identificate, accompagnate dagli schemi di navigazione che illustrano graficamente il percorso logico seguito dal sistema all'interno del modello dei dati.
+
+\subsection*{OP 1 – Registrazione di un nuovo profilo atleta}
+L'operazione prevede l'inserimento di un nuovo utente nel sistema. Trattandosi di una gerarchia di generalizzazione, il processo richiede la scrittura di un'istanza nell'entità padre (Utente) e, successivamente, la creazione dell'istanza corrispondente nell'entità figlia (Atleta).
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+UTENTE            & E                  & 1                & S             \\ \hline
+ATLETA            & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 1 (Totale: 2S $\rightarrow$ 4/settimana)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/3.3_OP1.png}
+    \caption{Schema di navigazione: Registrazione profilo atleta}
+\end{figure}
+
+\subsection*{OP 2 – Creazione di una nuova scheda di allenamento}
+Questa operazione consiste nella generazione di un nuovo piano di allenamento per un determinato atleta. Il sistema legge l'identificativo dell'atleta interessato e inserisce i dati relativi alla nuova scheda, formalizzando il legame univoco tramite la relazione di possesso.
+* **Frequenza**: 10 alla settimana.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+ATLETA            & E                  & 1                & L             \\ \hline
+POSSESSO          & R                  & 1                & S             \\ \hline
+SCHEDA            & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 2 (Totale: 1L + 2S $\rightarrow$ 30/settimana)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/3.3_OP2.png}
+    \caption{Schema di navigazione: Creazione nuova scheda}
+\end{figure}
+
 \end{document}
