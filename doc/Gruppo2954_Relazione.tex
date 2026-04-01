@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{array}
+\usepackage{pdflscape}
 \geometry{a4paper, margin=1in}
 
 % --- INIZIO FRONTESPIZIO ---
@@ -187,5 +188,21 @@ La serie è legata alla \textbf{SESSIONE} tramite la relazione \textbf{STORICO} 
     \includegraphics[width=1\textwidth]{images/2.1.4_db.png}
     \caption{Schema scheletro: Modellazione atomica delle Serie e Storico}
 \end{figure}
+
+\section{Schema Concettuale Globale}
+In questa sezione viene presentato lo \textbf{Schema Concettuale Globale}, risultato dell'integrazione dei quattro moduli precedentemente analizzati. La visione d'insieme permette di verificare la coerenza dei vincoli di integrità e la fluidità del passaggio dei dati tra la fase di programmazione e quella di monitoraggio prestativo.
+
+L'integrazione ruota attorno a due pilastri: l'entità \textbf{ATLETA}, che coordina anagrafica e programmazione, e l'entità \textbf{ESERCIZIO}, che fa da ponte tra il catalogo tecnico e l'esecuzione pratica delle serie. La presenza di gerarchie totali ed esclusive per utenti, esercizi e serie garantisce una classificazione rigorosa dei dati, mentre la relazione ricorsiva delle \textbf{VARIANTI} aggiunge la flessibilità necessaria per l'uso reale in palestra.
+
+\newpage
+\begin{landscape}
+\begin{figure}[p] % [p] lo mette in una pagina a sé stante
+    \centering
+    % Regola la larghezza al 100% della 'testo-altezza' (che ora è la larghezza)
+    \includegraphics[width=1.5\textheight, height=1.3\textwidth, keepaspectratio]{images/2.2_db.png}
+    \caption{Schema Concettuale Globale: Rappresentazione integrale e interconnessa del dominio}
+\end{figure}
+\end{landscape}
+\newpage
 
 \end{document}
