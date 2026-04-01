@@ -304,8 +304,30 @@ SCHEDA            & E                  & 1                & S             \\ \hl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/3.3_OP2.png}
+    \includegraphics[width=0.9\textwidth]{images/3.3_OP2.png}
     \caption{Schema di navigazione: Creazione nuova scheda}
+\end{figure}
+
+\subsection*{OP 3 – Inserimento di una nuova sessione di allenamento}
+L'operazione consiste nella registrazione dell'inizio di un allenamento effettivo. Il sistema identifica la giornata teorica della scheda che l'atleta intende svolgere (es. "Giorno A") e crea un'istanza di sessione, legandola alla giornata tramite la relazione di esecuzione.
+* \textbf{Frequenza}: 40 al giorno.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+GIORNATA          & E                  & 1                & L             \\ \hline
+ESECUZIONE        & R                  & 1                & S             \\ \hline
+SESSIONE          & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 3 (Totale: 1L + 2S $\rightarrow$ 120/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/3.3_OP3.png}
+    \caption{Schema di navigazione: Inserimento nuova sessione}
 \end{figure}
 
 \end{document}
