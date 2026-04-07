@@ -265,10 +265,18 @@ Viene presentato l'elenco delle 13 operazioni principali previste per l'interazi
 \end{longtable}
 
 \section{Schemi di navigazione e tabelle degli accessi}
-Di seguito riportiamo le tabelle degli accessi per le operazioni identificate, accompagnate dagli schemi di navigazione che illustrano graficamente il percorso logico seguito dal sistema all'interno del modello dei dati.
+In questa sezione vengono analizzati i carichi di lavoro per le operazioni identificate nel paragrafo precedente. Per ogni operazione viene fornita una tabella degli accessi e, dove la complessità lo richiede, uno schema di navigazione.
+
+Al fine di garantire la massima chiarezza e leggibilità, gli schemi di navigazione adottano una forma semplificata del modello E-R secondo le seguenti convenzioni:
+\begin{itemize}
+    \item \textbf{Astrazione degli attributi}: vengono omesse le proprietà delle entità per focalizzare l'attenzione esclusivamente sul percorso logico tra i costrutti.
+    \item \textbf{Isolamento dei componenti}: ogni schema riporta esclusivamente le entità e le relazioni effettivamente coinvolte nella specifica operazione.
+    \item \textbf{Codifica cromatica}: le frecce verdi indicano operazioni di Lettura (L), mentre le frecce rosse indicano operazioni di Scrittura (S).
+\end{itemize}
 
 \subsection*{OP 1 – Registrazione di un nuovo profilo atleta}
 L'operazione prevede l'inserimento di un nuovo utente nel sistema. Trattandosi di una gerarchia di generalizzazione, il processo richiede la scrittura di un'istanza nell'entità padre (Utente) e, successivamente, la creazione dell'istanza corrispondente nell'entità figlia (Atleta).
+* \textbf{Frequenza}: 2 alla settimana.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -288,7 +296,7 @@ ATLETA            & E                  & 1                & S             \\ \hl
 
 \subsection*{OP 2 – Creazione di una nuova scheda di allenamento}
 Questa operazione consiste nella generazione di un nuovo piano di allenamento per un determinato atleta. Il sistema legge l'identificativo dell'atleta interessato e inserisce i dati relativi alla nuova scheda, formalizzando il legame univoco tramite la relazione di possesso.
-* **Frequenza**: 10 alla settimana.
+* \textbf{Frequenza}: 10 alla settimana.
 
 \begin{table}[H]
 \centering
@@ -328,6 +336,30 @@ SESSIONE          & E                  & 1                & S             \\ \hl
     \centering
     \includegraphics[width=0.9\textwidth]{images/3.3_OP3.png}
     \caption{Schema di navigazione: Inserimento nuova sessione}
+\end{figure}
+
+\subsection*{OP 4 – Registrazione dei dati di una singola serie}
+Questa operazione rappresenta il cuore pulsante del sistema di tracciamento. Per ogni serie completata, l'atleta inserisce il carico (KG), le ripetizioni (Reps) e l'eventuale cedimento. Il sistema deve leggere la sessione attiva e l'esercizio di riferimento, per poi scrivere il nuovo record atomico e i relativi legami di appartenenza.
+* \textbf{Frequenza}: 1.500 al giorno.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+SESSIONE          & E                  & 1                & L             \\ \hline
+ESERCIZIO         & E                  & 1                & L             \\ \hline
+STORICO           & R                  & 1                & S             \\ \hline
+TIPOLOGIA         & R                  & 1                & S             \\ \hline
+SERIE             & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 4 (Totale: 2L + 3S $\rightarrow$ 7.500/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/3.3_OP4.png}
+    \caption{Schema di navigazione: Registrazione singola serie}
 \end{figure}
 
 \end{document}
