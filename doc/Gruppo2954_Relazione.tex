@@ -385,4 +385,44 @@ SERIE             & E                  & 40               & L             \\ \hl
     \caption{Schema di navigazione: Visualizzazione storico carichi}
 \end{figure}
 
+\subsection*{OP 6 – Inserimento di una misurazione biometrica periodica}
+L'operazione permette all'atleta di registrare i propri progressi fisici. Viene considerata banale in quanto ricalca la logica di inserimento già analizzata nella OP 2, con una scrittura diretta nell'entità Misurazione.
+* \textbf{Frequenza}: 10 al giorno.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+ATLETA            & E                  & 1                & L             \\ \hline
+PROGRESSO         & R                  & 1                & S             \\ \hline
+MISURAZIONE       & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 6 (Totale: 1L + 2S $\rightarrow$ 30/giorno)}
+\end{table}
+
+\subsection*{OP 7 – Invio di un feedback tecnico dal Coach su una specifica sessione}
+Questa operazione permette al Coach di commentare una prestazione specifica. Il sistema deve identificare il Coach e la Sessione corretta per poi creare l'entità Messaggio e i relativi legami di paternità (Autore) e riferimento (Feedback).
+* \textbf{Frequenza}: 20 al giorno.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+COACH             & E                  & 1                & L             \\ \hline
+SESSIONE          & E                  & 1                & L             \\ \hline
+AUTORE            & R                  & 1                & S             \\ \hline
+FEEDBACK          & R                  & 1                & S             \\ \hline
+MESSAGGIO         & E                  & 1                & S             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 7 (Totale: 2L + 3S $\rightarrow$ 100/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/3.3_OP7.png}
+    \caption{Schema di navigazione: Invio feedback tecnico}
+\end{figure}
+
 \end{document}
