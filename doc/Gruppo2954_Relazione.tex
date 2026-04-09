@@ -362,4 +362,27 @@ SERIE             & E                  & 1                & S             \\ \hl
     \caption{Schema di navigazione: Registrazione singola serie}
 \end{figure}
 
+\subsection*{OP 5 – Visualizzazione dello storico carichi e record personali (PR)}
+Questa operazione permette all'atleta di consultare le prestazioni passate per un determinato esercizio. Il sistema deve recuperare tutte le serie storiche associate a quell'esercizio per estrarre il carico massimo sollevato (PR) o calcolare medie prestative. 
+* \textbf{Frequenza}: 50 al giorno.
+* \textbf{Assunzione}: Si stima che ogni atleta abbia mediamente 40 serie storiche per ogni singolo esercizio del catalogo.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+ESERCIZIO         & E                  & 1                & L             \\ \hline
+TIPOLOGIA         & R                  & 40               & L             \\ \hline
+SERIE             & E                  & 40               & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 5 (Totale: 81L $\rightarrow$ 4.050/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/3.3_OP5.png} 
+    \caption{Schema di navigazione: Visualizzazione storico carichi}
+\end{figure}
+
 \end{document}
