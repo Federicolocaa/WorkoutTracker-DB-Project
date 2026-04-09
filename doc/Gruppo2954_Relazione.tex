@@ -243,25 +243,25 @@ AUTORE & R & 5.000 \\ \hline
 \end{longtable}
 
 \section{Descrizione delle operazioni principali e stima della loro frequenza}
-Viene presentato l'elenco delle 13 operazioni principali previste per l'interazione con la base di dati, classificate per frequenza d'uso giornaliera o settimanale.
+Viene presentato l'elenco delle 13 operazioni principali. Per elevare la qualità della progettazione, sono state incluse operazioni di analisi complessa che richiedono la navigazione di più entità e relazioni, superando la semplice gestione atomica dei dati.
 
-\begin{longtable}{|l|p{9cm}|l|}
+\begin{longtable}{|l|p{9.5cm}|l|}
 \hline
 \textbf{Codice} & \textbf{Operazione} & \textbf{Frequenza} \\ \hline
 \endhead
-1 & Registrazione di un nuovo profilo atleta & 2/settimana \\ \hline
-2 & Creazione di una nuova scheda di allenamento & 10/settimana \\ \hline
-3 & Inserimento di una nuova sessione di allenamento & 40/giorno \\ \hline
-4 & Registrazione dei dati di una singola serie (KG, Reps, Cedimento) & 1.500/giorno \\ \hline
-5 & Visualizzazione dello storico carichi e record personali (PR) & 50/giorno \\ \hline
-6 & Inserimento di una misurazione biometrica (peso, bodyfat) & 10/giorno \\ \hline
-7 & Invio di un messaggio di feedback tecnico dal coach & 20/giorno \\ \hline
-8 & Visualizzazione della dashboard atleti per un coach & 15/giorno \\ \hline
-9 & Ricerca di esercizi varianti in base alla disponibilità logistica & 10/giorno \\ \hline
-10 & Verifica del requisito di attrezzatura per un esercizio guidato & 30/giorno \\ \hline
-11 & Aggiornamento degli obiettivi periodici dell'atleta & 5/mese \\ \hline
-12 & Generazione report grafico dell'andamento biometrico & 15/giorno \\ \hline
-13 & Filtro degli esercizi per coinvolgimento gruppo muscolare & 10/giorno \\ \hline
+1 & Registrazione di un nuovo profilo atleta (Gerarchia Utente-Atleta) & 2/settimana \\ \hline
+2 & Creazione di una nuova scheda con relativa pianificazione esercizi target & 10/settimana \\ \hline
+3 & Inserimento di una nuova sessione di allenamento reale & 40/giorno \\ \hline
+4 & Registrazione dei dati di performance di una singola serie (KG, Reps, Cedimento) & 1.500/giorno \\ \hline
+5 & Ricerca del Record Personale (PR) assoluto nello storico di un esercizio & 50/giorno \\ \hline
+6 & Inserimento di una misurazione biometrica periodica & 10/giorno \\ \hline
+7 & Invio di un feedback tecnico dal Coach su una specifica sessione svolta & 20/giorno \\ \hline
+8 & Ricerca di esercizi varianti (Relazione Ricorsiva) per macchinari occupati & 10/giorno \\ \hline
+9 & Calcolo del volume totale di lavoro (Serie x Reps x KG) mensile per uno specifico gruppo muscolare & 20/giorno \\ \hline
+10 & Verifica della disponibilità di tutta l'attrezzatura necessaria per completare una specifica giornata di scheda & 40/giorno \\ \hline
+11 & Dashboard Coach: visualizzazione degli ultimi PR e feedback pendenti per tutti gli atleti supervisionati & 15/giorno \\ \hline
+12 & Generazione report di confronto tra volume teorico programmato e volume reale effettivamente sollevato & 5/giorno \\ \hline
+13 & Filtraggio avanzato del catalogo esercizi per distretto muscolare e tipo di attrezzatura richiesta & 10/giorno \\ \hline
 \end{longtable}
 
 \section{Schemi di navigazione e tabelle degli accessi}
@@ -381,7 +381,7 @@ SERIE             & E                  & 40               & L             \\ \hl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/3.3_OP5.png} 
+    \includegraphics[width=0.8\textwidth]{images/3.3_OP5.png} 
     \caption{Schema di navigazione: Visualizzazione storico carichi}
 \end{figure}
 
