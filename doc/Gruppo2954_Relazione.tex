@@ -425,4 +425,26 @@ MESSAGGIO         & E                  & 1                & S             \\ \hl
     \caption{Schema di navigazione: Invio feedback tecnico}
 \end{figure}
 
+\subsection*{OP 8 – Ricerca di esercizi varianti (Relazione Ricorsiva)}
+Questa operazione permette di individuare esercizi alternativi nel caso in cui l'attrezzatura prevista non sia disponibile. Il sistema interroga la relazione ricorsiva \textbf{VARIANTE} sull'entità Esercizio. Si stima una media di 3 varianti per ogni esercizio presente nel catalogo.
+* \textbf{Frequenza}: 10 al giorno.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+ESERCIZIO         & E                  & 1                & L             \\ \hline
+VARIANTE          & R                  & 3                & L             \\ \hline
+ESERCIZIO (Sost.) & E                  & 3                & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 8 (Totale: 7L $\rightarrow$ 70/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/3.3_OP8.png}
+    \caption{Schema di navigazione: Ricerca varianti tramite relazione ricorsiva}
+\end{figure}
+
 \end{document}
