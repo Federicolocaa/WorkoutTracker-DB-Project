@@ -290,7 +290,7 @@ ATLETA            & E                  & 1                & S             \\ \hl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{images/3.3_OP1.png}
+    \includegraphics[width=0.3\textwidth]{images/3.3_OP1.png}
     \caption{Schema di navigazione: Registrazione profilo atleta}
 \end{figure}
 
@@ -445,6 +445,31 @@ ESERCIZIO (Sost.) & E                  & 3                & L             \\ \hl
     \centering
     \includegraphics[width=0.7\textwidth]{images/3.3_OP8.png}
     \caption{Schema di navigazione: Ricerca varianti tramite relazione ricorsiva}
+\end{figure}
+
+\subsection*{OP 9 – Calcolo del volume totale mensile per gruppo muscolare}
+Questa operazione rappresenta una delle funzionalità analitiche più avanzate del sistema, permettendo di monitorare lo stimolo ipertrofico complessivo. Il sistema parte da un distretto anatomico specifico e, navigando l'intera gerarchia, somma il lavoro prodotto (calcolato come $KG \times Reps$) di tutte le serie effettuate nell'ultimo mese solare.
+* \textbf{Frequenza}: 20 al giorno.
+* \textbf{Assunzione}: Si ipotizza che un singolo Gruppo Muscolare sia associato mediamente a 10 Esercizi e che per ciascuno di essi siano state eseguite 10 serie nel mese di riferimento (100 serie totali).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+GRUPPO MUSCOLARE  & E                  & 1                & L             \\ \hline
+COINVOLGIMENTO    & R                  & 10               & L             \\ \hline
+ESERCIZIO         & E                  & 10               & L             \\ \hline
+TIPOLOGIA         & R                  & 100              & L             \\ \hline
+SERIE             & E                  & 100              & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 9 (Totale: 221L $\rightarrow$ 4.420/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/3.3_OP9.png}
+    \caption{Schema di navigazione: Analisi volumetrica per gruppo muscolare}
 \end{figure}
 
 \end{document}
