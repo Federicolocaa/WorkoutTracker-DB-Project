@@ -443,7 +443,7 @@ ESERCIZIO (Sost.) & E                  & 3                & L             \\ \hl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/3.3_OP8.png}
+    \includegraphics[width=0.6\textwidth]{images/3.3_OP8.png}
     \caption{Schema di navigazione: Ricerca varianti tramite relazione ricorsiva}
 \end{figure}
 
@@ -470,6 +470,32 @@ SERIE             & E                  & 100              & L             \\ \hl
     \centering
     \includegraphics[width=0.7\textwidth]{images/3.3_OP9.png}
     \caption{Schema di navigazione: Analisi volumetrica per gruppo muscolare}
+\end{figure}
+
+\subsection*{OP 10 – Verifica disponibilità attrezzatura per una giornata di scheda}
+Questa operazione consente all'atleta di controllare preventivamente quali macchinari o attrezzi specifici saranno necessari per l'allenamento previsto. Il sistema analizza la giornata di scheda selezionata, identifica i relativi esercizi e, per quelli appartenenti alla sottoclasse \textbf{GUIDATO}, recupera l'elenco delle attrezzature associate tramite la relazione \textbf{REQUISITO}.
+* \textbf{Frequenza}: 40 al giorno.
+* \textbf{Assunzione}: Si ipotizza che una giornata di allenamento comprenda mediamente 8 esercizi, di cui il 50\% (ovvero 4) appartenga alla categoria degli esercizi guidati che richiedono attrezzatura specifica.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+GIORNATA          & E                  & 1                & L             \\ \hline
+PIANIFICAZIONE    & R                  & 8                & L             \\ \hline
+ESERCIZIO         & E                  & 8                & L             \\ \hline
+GUIDATO           & E                  & 4                & L             \\ \hline
+REQUISITO         & R                  & 4                & L             \\ \hline
+ATTREZZATURA      & E                  & 4                & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 10 (Totale: 29L $\rightarrow$ 1.160/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/3.3_OP10.png}
+    \caption{Schema di navigazione: Verifica requisiti attrezzatura per esercizi guidati}
 \end{figure}
 
 \end{document}
