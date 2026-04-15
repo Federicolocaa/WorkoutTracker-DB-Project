@@ -498,4 +498,75 @@ ATTREZZATURA      & E                  & 4                & L             \\ \hl
     \caption{Schema di navigazione: Verifica requisiti attrezzatura per esercizi guidati}
 \end{figure}
 
+\subsection*{OP 11 – Dashboard Coach: Monitoraggio PR e Feedback pendenti}
+Questa operazione di aggregazione dati è dedicata alla figura professionale del Coach per la supervisione simultanea degli atleti assegnati. Il sistema interroga la relazione di \textbf{SUPERVISIONE} per identificare gli atleti e recupera per ciascuno di essi gli ultimi Record Personali (PR) e i messaggi di feedback che richiedono attenzione tecnica.
+* \textbf{Frequenza}: 15 al giorno.
+* \textbf{Assunzione}: Si ipotizza che un coach supervisioni mediamente 10 atleti; per ogni profilo vengono visualizzati i 3 messaggi più recenti e i 2 PR ottenuti nelle ultime sessioni di allenamento (20 serie totali).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+COACH             & E                  & 1                & L             \\ \hline
+SUPERVISIONE      & R                  & 10               & L             \\ \hline
+ATLETA            & E                  & 10               & L             \\ \hline
+MESSAGGIO         & E                  & 30               & L             \\ \hline
+SESSIONE          & E                  & 20               & L             \\ \hline
+SERIE             & E                  & 20               & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 11 (Totale: 91L $\rightarrow$ 1.365/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/3.3_OP11.png}
+    \caption{Schema di navigazione: Dashboard di supervisione per il Coach}
+\end{figure}
+
+\subsection*{OP 12 – Report di confronto Volume Teorico vs Reale}
+Operazione di controllo qualità che permette di quantificare lo scostamento tra la programmazione astratta e l'esecuzione pratica. Il sistema mette in relazione i target di volume impostati nella \textbf{PIANIFICAZIONE} della giornata con i dati atomici dello \textbf{STORICO} relativi alle serie effettivamente completate nella sessione.
+* \textbf{Frequenza}: 5 al giorno.
+* \textbf{Assunzione}: Si analizza una singola sessione basata su una giornata da 8 esercizi, per i quali sono state eseguite mediamente 3 serie ciascuno (24 serie totali nello storico).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+SESSIONE          & E                  & 1                & L             \\ \hline
+ESECUZIONE        & R                  & 1                & L             \\ \hline
+GIORNATA          & E                  & 1                & L             \\ \hline
+PIANIFICAZIONE    & R                  & 8                & L             \\ \hline
+STORICO           & R                  & 24               & L             \\ \hline
+SERIE             & E                  & 24               & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 12 (Totale: 59L $\rightarrow$ 295/giorno)}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/3.3_OP12.png}
+    \caption{Schema di navigazione: Report comparativo volume programmato vs reale}
+\end{figure}
+
+\subsection*{OP 13 – Filtraggio avanzato catalogo: Muscolo e Attrezzatura}
+Questa query consente una ricerca tecnica incrociata nel catalogo esercizi. L'utente può filtrare i movimenti che colpiscono un determinato distretto anatomico e che richiedono contemporaneamente l'uso di una specifica attrezzatura presente in sala.
+* \textbf{Frequenza}: 10 al giorno.
+* \textbf{Assunzione}: Nel catalogo si stima che un gruppo muscolare sia legato a 30 esercizi tramite la relazione di coinvolgimento, di cui mediamente 10 richiedono lo specifico macchinario cercato.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+GRUPPO MUSCOLARE  & E                  & 1                & L             \\ \hline
+COINVOLGIMENTO    & R                  & 30               & L             \\ \hline
+ESERCIZIO         & E                  & 30               & L             \\ \hline
+REQUISITO         & R                  & 10               & L             \\ \hline
+ATTREZZATURA      & E                  & 1                & L             \\ \hline
+\end{tabular}
+\caption{Tabella degli accessi per OP 13 (Totale: 72L $\rightarrow$ 720/giorno)}
+\end{table}
+
 \end{document}
