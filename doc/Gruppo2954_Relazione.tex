@@ -35,13 +35,13 @@
 Si vuole realizzare una base di dati per la gestione professionale delle routine di allenamento e il monitoraggio delle performance atletiche. Il sistema prevede due tipologie di utenti: gli \textbf{atleti}, che caricano i propri progressi, e i \textbf{coach}, che possono supervisionare il lavoro degli atleti assegnati.
 
 \textbf{Gestione Utenti e Supervisione}:
-Per ogni \textbf{utente} si memorizzano: nome, cognome, email (univoca) e password. Gli \textbf{atleti} aggiungono dati fisici (peso, altezza), mentre per i \textbf{coach} si tracciano le certificazioni. Un coach può seguire più atleti. L'atleta gestisce le proprie \textbf{schede di allenamento}, suddivise in \textbf{giornate} (es. Giorno A, Giorno B).
+Per ogni \textbf{utente} si memorizzano: nome, cognome, email (univoca) e password. Gli \textbf{atleti} aggiungono dati fisici (peso, altezza), mentre per i \textbf{coach} si tracciano le certificazioni. Un coach può seguire più atleti. L'atleta gestisce le proprie \textbf{schede di allenamento}, suddivise in \textbf{giornate} (es. Giorno A, Giorno B). Oltre alla programmazione, il sistema consente di storicizzare \textbf{misurazioni} biometriche periodiche per monitorare i progressi fisici e permette ai coach di fornire supporto tecnico tramite \textbf{messaggi} di feedback contestualizzati.
 
 \textbf{Catalogo Esercizi e Attrezzatura}:
 Il database deve immagazzinare informazioni relative a un vasto catalogo di \textbf{esercizi}, memorizzando per ciascuno il nome tecnico (univoco), una descrizione dettagliata e il \textbf{gruppo muscolare} primario coinvolto (es. Pettorali, Dorsali). Il sistema opera una distinzione tassonomica tra \textbf{esercizi liberi} (es. manubri o bilancieri) ed \textbf{esercizi guidati}, i quali richiedono obbligatoriamente il legame con una specifica \textbf{attrezzatura} (es. cavi o macchinari specifici come Panatta). Tale classificazione è fondamentale poiché ogni tipologia di attrezzo conferisce specifiche modalità di esecuzione che influenzano direttamente la stabilità, la biomeccanica del movimento e la dinamica del carico sollevato.
 
 \textbf{Sessioni e Tracciamento Performance}:
-Il fulcro del sistema è il tracciamento delle \textbf{sessioni di allenamento}, ovvero l'attuazione reale di una scheda in una data precisa. Durante una sessione, l'atleta registra le \textbf{serie} (set) effettuate per ogni esercizio. Per ogni singola serie è necessario memorizzare:
+Il fulcro del sistema è il tracciamento delle \textbf{sessioni di allenamento}, ovvero l'attuazione reale di una scheda in una data precisa. Durante una sessione, l'atleta registra le \textbf{serie} (set) effettuate per ogni esercizio, \textbf{distinguendo tra serie di riscaldamento (warm-up) e serie allenanti (working set)}. Per ogni singola serie è necessario memorizzare:
 \begin{itemize}
     \item Il carico sollevato espresso in chilogrammi (KG).
     \item Il numero di ripetizioni completate (Reps).
@@ -55,11 +55,11 @@ Infine, per ciascun allenamento si registra lo storico completo dei dati, permet
 \section{Estrazione dei Concetti Principali}
 Di seguito evidenziamo i concetti principali estratti dalla richiesta del committente, individuando le entità che andranno a formare lo schema concettuale.
 
-Il sistema è progettato per gestire professionalmente le routine di allenamento e l'analisi delle performance. Il database immagazzinerà informazioni relative a una gerarchia di \textbf{utenti}, al catalogo tecnico degli esercizi e alle sessioni di allenamento reali. L'identificatore univoco per l'accesso e la gestione dei profili è l'indirizzo email. Gli utenti si specializzano in \textbf{atleti}, dei quali si memorizzano dati anagrafici (nome, cognome, data di nascita) e biometrici (peso, altezza), e \textbf{coach}, responsabili della supervisione e della validazione dei programmi.
+Il sistema è progettato per gestire professionalmente le routine di allenamento e l'analisi delle performance. Il database immagazzinerà informazioni relative a una gerarchia di \textbf{utenti}, al catalogo tecnico degli esercizi e alle sessioni di allenamento reali. L'identificatore univoco per l'accesso e la gestione dei profili è l'indirizzo email. Gli utenti si specializzano in \textbf{atleti}, dei quali si memorizzano dati anagrafici (nome, cognome, data di nascita) e biometrici (peso, altezza), e \textbf{coach}, responsabili della supervisione e della validazione dei programmi. Il monitoraggio dell'evoluzione fisica è affidato all'entità \textbf{misurazione}, mentre l'interazione tecnica tra le figure professionali avviene tramite lo scambio di \textbf{messaggi} di feedback.
 
-Ogni atleta gestisce la propria programmazione attraverso le \textbf{schede di allenamento}, strutturate in diverse \textbf{giornate} specifiche (es. Giorno A, Giorno B) per garantire flessibilità nella frequenza settimanale. Il catalogo degli \textbf{esercizi} opera una distinzione tassonomica tra \textbf{esercizi liberi} (es. bilancieri) ed \textbf{esercizi guidati}. Questi ultimi presentano un legame obbligatorio con l'entità \textbf{attrezzatura} (es. macchinari Panatta o cavi), la quale definisce i vincoli biomeccanici e di stabilità dell'esecuzione.
+Ogni atleta gestisce la propria programmazione attraverso le \textbf{schede di allenamento}, strutturate in diverse \textbf{giornate} specifiche (es. Giorno A, Giorno B) per garantire flessibilità nella frequenza settimanale. Il catalogo degli \textbf{esercizi} opera una distinzione tassonomica tra \textbf{esercizi liberi} (es. bilancieri) ed \textbf{esercizi guidati}. Questi ultimi presentano un legame obbligatorio con l'entità \textbf{attrezzatura} (es. macchinari Panatta o cavi), la quale definisce i vincoli biomeccanici e di stabilità dell'esecuzione. Il catalogo è reso flessibile dalla gestione delle \textbf{varianti}, che permettono di mappare relazioni di sostituibilità tra esercizi diversi.
 
-Il fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'istanza reale in cui l'atleta esegue una specifica giornata della sua scheda in una data precisa. Durante la sessione si registrano i dati atomici delle \textbf{serie} (set), descrivendo nel dettaglio il carico sollevato in KG, il numero di ripetizioni, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
+Il fulcro del monitoraggio è la \textbf{sessione di allenamento}, ovvero l'istanza reale in cui l'atleta esegue una specifica giornata della sua scheda in una data precisa. Durante la sessione si registrano i dati atomici delle \textbf{serie} (set), distinguendo tra set di riscaldamento (\textbf{warm-up}) e serie effettive (\textbf{working set}), descrivendo nel dettaglio il carico sollevato in KG, il numero di ripetizioni, l'eventuale uso di zavorre e il raggiungimento del cedimento muscolare.
 
 Il sistema deve inoltre gestire eccezioni come l'omissione di un esercizio o l'esecuzione di varianti, permettendo al contempo di associare immagini per il monitoraggio della forma fisica. Infine, la base di dati deve consentire l'estrazione di metriche aggregate, quali il volume totale di lavoro e la media dei carichi sollevati nel corso delle diverse campagne di allenamento.
 
@@ -243,7 +243,7 @@ AUTORE & R & 5.000 \\ \hline
 \end{longtable}
 
 \section{Descrizione delle operazioni principali e stima della loro frequenza}
-Viene presentato l'elenco delle 13 operazioni principali. Per elevare la qualità della progettazione, sono state incluse operazioni di analisi complessa che richiedono la navigazione di più entità e relazioni, superando la semplice gestione atomica dei dati.
+Viene presentato l'elenco delle 12 operazioni principali. Per elevare la qualità della progettazione, sono state incluse operazioni di analisi complessa che richiedono la navigazione di più entità e relazioni, superando la semplice gestione atomica dei dati.
 
 \begin{longtable}{|l|p{9.5cm}|l|}
 \hline
@@ -646,3 +646,4 @@ Di seguito viene presentato lo schema E-R risultante dalle operazioni di raffina
 \end{figure}
 
 \end{document}
+√
