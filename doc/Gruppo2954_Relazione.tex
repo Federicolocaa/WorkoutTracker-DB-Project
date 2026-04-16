@@ -261,7 +261,6 @@ Viene presentato l'elenco delle 13 operazioni principali. Per elevare la qualit�
 10 & Verifica della disponibilità di tutta l'attrezzatura necessaria per completare una specifica giornata di scheda & 40/giorno \\ \hline
 11 & Dashboard Coach: visualizzazione degli ultimi PR e feedback pendenti per tutti gli atleti supervisionati & 15/giorno \\ \hline
 12 & Generazione report di confronto tra volume teorico programmato e volume reale effettivamente sollevato & 5/giorno \\ \hline
-13 & Filtraggio avanzato del catalogo esercizi per distretto muscolare e tipo di attrezzatura richiesta & 10/giorno \\ \hline
 \end{longtable}
 
 \section{Schemi di navigazione e tabelle degli accessi}
@@ -532,9 +531,9 @@ MESSAGGIO         & E                  & 30               & L             \\ \hl
 \end{figure}
 
 \subsection*{OP 12 – Report di confronto Volume Teorico vs Reale}
-Questa operazione mette in relazione la pianificazione astratta con l'esecuzione pratica. Il sistema identifica la giornata di riferimento della sessione per leggere i target teorici e contemporaneamente scansiona lo storico delle serie per calcolare il volume reale sollevato.
+Questa operazione rappresenta il nucleo analitico del sistema, mettendo in relazione la programmazione astratta con l'esecuzione pratica. Il sistema crea un anello di congiunzione tra la \textbf{SESSIONE} e l'\textbf{ESERCIZIO} seguendo due rami distinti: quello della pianificazione (tramite la giornata) e quello dello storico (tramite le serie effettive). Questo permette di calcolare il volume totale sollevato e confrontarlo con i target previsti.
 * \textbf{Frequenza}: 5 al giorno.
-* \textbf{Assunzione}: Si analizza una singola sessione basata su una giornata da 8 esercizi, per i quali sono state eseguite mediamente 3 serie ciascuno (24 serie totali).
+* \textbf{Assunzione}: Si analizza una singola sessione basata su una giornata da 8 esercizi, per i quali sono state eseguite mediamente 3 serie ciascuno (24 serie totali nello storico).
 
 \begin{table}[H]
 \centering
@@ -545,30 +544,18 @@ SESSIONE          & E                  & 1                & L             \\ \hl
 ESECUZIONE        & R                  & 1                & L             \\ \hline
 GIORNATA          & E                  & 1                & L             \\ \hline
 PIANIFICAZIONE    & R                  & 8                & L             \\ \hline
+ESERCIZIO         & E                  & 8                & L             \\ \hline
 STORICO           & R                  & 24               & L             \\ \hline
 SERIE             & E                  & 24               & L             \\ \hline
+TIPOLOGIA         & R                  & 24               & L             \\ \hline
 \end{tabular}
-\caption{Tabella degli accessi per OP 12 (Totale: 59L $\rightarrow$ 295/giorno)}
+\caption{Tabella degli accessi per OP 12 (Totale: 91L $\rightarrow$ 455/giorno)}
 \end{table}
 
-\subsection*{OP 13 – Filtraggio avanzato catalogo: Muscolo e Attrezzatura}
-Ricerca tecnica incrociata nel catalogo per individuare esercizi che coinvolgano specifici distretti muscolari e richiedano una determinata attrezzatura. L'operazione naviga dal gruppo muscolare fino ai requisiti tecnici degli esercizi guidati.
-* \textbf{Frequenza}: 10 al giorno.
-* \textbf{Assunzione}: Si stima che un gruppo muscolare sia legato a 30 esercizi, di cui mediamente 10 appartengono alla sottoclasse dei guidati con attrezzatura specifica.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
-GRUPPO MUSCOLARE  & E                  & 1                & L             \\ \hline
-COINVOLGIMENTO    & R                  & 30               & L             \\ \hline
-ESERCIZIO         & E                  & 30               & L             \\ \hline
-GUIDATO           & E                  & 10               & L             \\ \hline
-REQUISITO         & R                  & 10               & L             \\ \hline
-ATTREZZATURA      & E                  & 10               & L             \\ \hline
-\end{tabular}
-\caption{Tabella degli accessi per OP 13 (Totale: 91L $\rightarrow$ 910/giorno)}
-\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/3.3_OP12.png}
+    \caption{Schema di navigazione: Confronto volumetrico tra pianificazione e storico serie}
+\end{figure}
 
 \end{document}
