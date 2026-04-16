@@ -558,4 +558,63 @@ TIPOLOGIA         & R                  & 24               & L             \\ \hl
     \caption{Schema di navigazione: Confronto volumetrico tra pianificazione e storico serie}
 \end{figure}
 
+\newpage
+
+\section{Analisi delle ridondanze}
+In questa fase della progettazione logica, viene valutata l'opportunità di introdurre dati ridondanti all'interno dello schema concettuale. L'obiettivo primario è l'efficientamento delle operazioni di lettura più onerose (identificate nelle OP 9, 11 e 12), bilanciando il risparmio ottenuto con il costo aggiuntivo in termini di complessità nelle operazioni di scrittura e maggiore occupazione di memoria.
+
+\subsection{Ridondanza 1}
+La prima proposta riguarda l'inserimento dell'attributo \textbf{Volume\_Totale} all'interno dell'entità \textbf{SESSIONE}. Questo dato rappresenta il valore aggregato dello stimolo allenante, calcolato come la somma del prodotto ($carico \times ripetizioni$) di tutte le serie associate a quella specifica istanza di allenamento.
+
+\paragraph{Vantaggi:}
+Questa ridondanza mira a ottimizzare drasticamente le operazioni di analisi statistica, in particolare la \textbf{OP 9} (Volume Mensile) e la \textbf{OP 12} (Report Comparativo). Attualmente, per calcolare il volume di una sessione, il sistema deve accedere ricorsivamente a ogni singola serie tramite la relazione di \textbf{STORICO}. Con l'attributo ridondante, il costo di lettura per ottenere il volume di una sessione crolla da $n$ (numero di serie) a 1.
+
+\paragraph{Svantaggi:}
+La ridondanza introduce un sovraccarico nella \textbf{OP 4} (Registrazione Serie). Ogni volta che l'atleta inserisce una nuova prestazione, il sistema deve effettuare un accesso aggiuntivo in scrittura ($S$) all'entità \textbf{SESSIONE} per aggiornare il valore del volume totale, garantendo che il dato derivato sia sempre sincronizzato con i dati atomici.
+
+\paragraph{Confronto dei costi:} \mbox{} \\
+Si ipotizza una sessione media composta da 24 serie.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Operazione} & \textbf{Costo senza rid.} & \textbf{Costo con rid.} & \textbf{Variazione} \\ \hline
+OP 4 (Scrittura)    & 5 (2L + 3S)               & 6 (2L + 4S)             & +20\% (Aggravio)    \\ \hline
+OP 9 (Lettura)      & 221 L                     & 121 L                   & -45\% (Risparmio)   \\ \hline
+OP 12 (Lettura)     & 91 L                      & 68 L                    & -25\% (Risparmio)   \\ \hline
+\end{tabular}
+\caption{Confronto costi per la ridondanza dell'attributo Volume\_Totale}
+\end{table}
+
+\textbf{Decisione:} La ridondanza viene \textbf{ACCETTATA}. Il risparmio computazionale nelle fasi di analisi mensile (OP 9) e nel confronto volumetrico (OP 12) è superiore al 40\%, giustificando ampiamente il costo marginale di un singolo accesso in scrittura aggiuntivo durante la fase di allenamento.
+
+\subsection{Ridondanza 2}
+La seconda proposta prevede l'introduzione di una relazione diretta, denominata \textbf{SVOLGIMENTO}, tra l'entità \textbf{ATLETA} e l'entità \textbf{SESSIONE}. Tale scelta rappresenta una denormalizzazione mirata a svincolare il recupero dei dati storici dalla complessa catena di relazioni (\textit{Possesso - Composizione - Esecuzione}) che lega l'utente alla prestazione reale.
+
+\paragraph{Vantaggi:}
+Il beneficio principale risiede nell'ottimizzazione della \textbf{OP 11} (Dashboard Coach). Attualmente, per visualizzare le sessioni di un atleta, il sistema deve navigare l'intero percorso logico che attraversa le entità \textbf{SCHEDA} e \textbf{GIORNATA}. La nuova relazione permette di accedere direttamente alle istanze di \textbf{SESSIONE} partendo dall'atleta, riducendo drasticamente il numero di join logici necessari.
+
+\paragraph{Svantaggi:}
+La ridondanza introduce un costo aggiuntivo alla \textbf{OP 3} (Inserimento Sessione). La relazione \textbf{SVOLGIMENTO} presenta una cardinalità \textbf{(1,1)} lato Sessione e \textbf{(0,N)} lato Atleta; pertanto, all'apertura di ogni nuovo allenamento, il database deve scrivere un record supplementare per popolare questo legame diretto.
+
+\paragraph{Confronto dei costi:} \mbox{}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Operazione} & \textbf{Costo senza rid.} & \textbf{Costo con rid.} & \textbf{Variazione} \\ \hline
+OP 3 (Scrittura)    & 3 (1L + 2S)               & 4 (1L + 3S)             & +33\% (Aggravio)    \\ \hline
+OP 11 (Lettura)     & 401 L                     & 321 L                   & -20\% (Risparmio)   \\ \hline
+\end{tabular}
+\caption{Analisi dell'impatto della relazione ridondante SVOLGIMENTO}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/3.4.2_db.png}
+    \caption{Frammento E-R: Ottimizzazione del percorso di accesso Atleta-Sessione}
+\end{figure}
+
+\textbf{Decisione:} La ridondanza viene \textbf{ACCETTATA}. Nonostante l'aggravio sulla fase di inserimento, il risparmio netto di circa 1.200 accessi in lettura giornalieri sulla Dashboard Coach garantisce una gestione fluida della supervisione professionale.
+
 \end{document}
