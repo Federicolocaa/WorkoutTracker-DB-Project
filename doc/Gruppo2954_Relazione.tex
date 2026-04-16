@@ -10,7 +10,7 @@
 \usepackage{pdflscape}
 \geometry{a4paper, margin=1in}
 
-% --- INIZIO FRONTESPIZIO ---
+% --- FRONTESPIZIO ---
 \title{
     Relazione per il corso di Basi di Dati \\
     A.A. 2025/2026 \\
@@ -616,5 +616,33 @@ OP 11 (Lettura)     & 401 L                     & 321 L                   & -20\
 \end{figure}
 
 \textbf{Decisione:} La ridondanza viene \textbf{ACCETTATA}. Nonostante l'aggravio sulla fase di inserimento, il risparmio netto di circa 1.200 accessi in lettura giornalieri sulla Dashboard Coach garantisce una gestione fluida della supervisione professionale.
+
+\newpage
+
+\section{Raffinamento dello schema}
+In questa fase si procede alla trasformazione del modello concettuale in uno schema E-R ristrutturato, eliminando i costrutti non direttamente supportati dal modello relazionale e integrando le ottimizzazioni decise in fase di analisi delle ridondanze.
+
+\subsection{Eliminazione delle gerarchie}
+Le gerarchie di specializzazione (IS-A) presenti nel modello concettuale vengono risolte applicando la strategia del \textbf{collassamento verso l'alto} (generalizzazione nel padre). Tale scelta è dettata dalla necessità di massimizzare le prestazioni nelle operazioni di lettura più frequenti.
+
+\begin{itemize}
+    \item \textbf{Gerarchia UTENTE}: Le entità \textit{Atleta} e \textit{Coach} vengono accorpate in \textbf{UTENTE}. 
+    \textit{Motivazione}: L'operazione di login e la visualizzazione dei profili sono frequenti; l'accorpamento evita JOIN costosi e facilita la gestione della relazione di Supervisione. Verrà aggiunto l'attributo \textit{TipoUtente} per discriminare i ruoli.
+    
+    \item \textbf{Gerarchia ESERCIZIO}: Le entità \textit{Libero} e \textit{Guidato} vengono accorpate in \textbf{ESERCIZIO}. 
+    \textit{Motivazione}: Le analisi statistiche (OP 9, OP 12) richiedono dati aggregati sugli esercizi senza distinzione biomeccanica. L'attrezzo (per i guidati) diventerà un attributo opzionale legato all'entità Attrezzatura.
+    
+    \item \textbf{Gerarchia SERIE}: Le entità \textit{Warm-up} e \textit{Working Set} vengono accorpate in \textbf{SERIE}. 
+    \textit{Motivazione}: Il recupero dello storico serie durante una sessione è l'operazione più onerosa (OP 4, OP 5). Avere un'unica tabella con un flag discriminante \textit{IsWarmUp} permette di filtrare i record personali istantaneamente.
+\end{itemize}
+
+\subsection{Schema E-R Ristrutturato}
+Di seguito viene presentato lo schema E-R risultante dalle operazioni di raffinamento e dall'inserimento delle ridondanze accettate al paragrafo 3.4.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=1\textwidth]{images/3.5_db.png}
+    \caption{Schema E-R Ristrutturato dopo l'eliminazione delle gerarchie e l'inserimento delle ridondanze}
+\end{figure}
 
 \end{document}
