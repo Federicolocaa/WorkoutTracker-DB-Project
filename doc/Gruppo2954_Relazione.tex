@@ -636,12 +636,29 @@ Le gerarchie di specializzazione (IS-A) presenti nel modello concettuale vengono
     \textit{Motivazione}: Il recupero dello storico serie durante una sessione è l'operazione più onerosa (OP 4, OP 5). Avere un'unica tabella con un flag discriminante \textit{IsWarmUp} permette di filtrare i record personali istantaneamente.
 \end{itemize}
 
+\paragraph{Gestione delle Relazioni e Vincoli di Integrità:}
+Il collassamento delle gerarchie ha comportato una ridefinizione di alcune relazioni e l'introduzione di vincoli logici fondamentali per mantenere la coerenza semantica dello schema:
+\begin{itemize}
+    \item \textbf{Supervisione Ricorsiva}: Poiché Atleta e Coach sono confluiti in \textbf{UTENTE}, la relazione \textit{Supervisione} è diventata un anello ricorsivo. È stato imposto il vincolo per cui un utente non può supervisionare se stesso, e il ruolo di Supervisore può essere ricoperto solo da chi ha \textit{TipoUtente} impostato a 'Coach'.
+    \item \textbf{Relazioni ex-Atleta}: La relazione ridondante \textit{SVOLGIMENTO} (approvata nella sezione 3.4), così come \textit{POSSESSO} e \textit{PROGRESSO}, puntano ora direttamente all'entità \textbf{UTENTE}.
+    \item \textbf{Vincolo sull'Attrezzatura}: La relazione opzionale \textit{REQUISITO} (0,1) richiede un vincolo applicativo: il legame con l'attrezzo deve essere valorizzato se e solo se l'attributo \textit{TipoEsercizio} è uguale a 'Guidato'. Per gli esercizi 'Liberi', il campo assumerà rigorosamente valore NULL.
+    \item \textbf{Coerenza delle Serie}: Per le istanze di \textbf{SERIE} in cui il flag \textit{IsWarmUp} risulta \textit{True}, gli attributi \textit{zavorra} e \textit{isFailure} (non pertinenti al riscaldamento) non verranno popolati.
+\end{itemize}
+
+\subsection{Scelta degli identificatori principali}
+A seguito della ristrutturazione, sono stati confermati o introdotti i seguenti identificatori primari (chiavi naturali e artificiali) per garantire l'accesso univoco e ottimizzare le indicizzazioni:
+\begin{itemize}
+    \item \textbf{UTENTE}: L'indirizzo \textit{Email} è mantenuto come identificatore naturale e univoco.
+    \item \textbf{ESERCIZIO e GRUPPO MUSCOLARE}: Si utilizzano rispettivamente \textit{NomeEsercizio} e \textit{NomeMuscolo} come chiavi naturali, data la natura a catalogo di queste entità.
+    \item \textbf{Entità Operative}: Per \textbf{SESSIONE}, \textbf{SERIE}, \textbf{SCHEDA}, \textbf{GIORNATA} e \textbf{MESSAGGIO} si opta per l'introduzione di un \textit{codice identificativo} numerico auto-incrementale (ad es. ID\_Sessione). Tale approccio disaccoppia la logica di business dalla struttura fisica, garantendo elevate prestazioni nelle operazioni di JOIN e una minima occupazione di memoria.
+\end{itemize}
+
 \subsection{Schema E-R Ristrutturato}
 Di seguito viene presentato lo schema E-R risultante dalle operazioni di raffinamento e dall'inserimento delle ridondanze accettate al paragrafo 3.4.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=1\textwidth]{images/3.5_db.png}
+    \includegraphics[width=1\textwidth]{images/3.5.3_db.png}
     \caption{Schema E-R Ristrutturato dopo l'eliminazione delle gerarchie e l'inserimento delle ridondanze}
 \end{figure}
 
