@@ -8,7 +8,21 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{pdflscape}
+\usepackage{listings}
+\usepackage{xcolor}
+
 \geometry{a4paper, margin=1in}
+\lstdefinestyle{sql}{
+    language=SQL,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries,
+    commentstyle=\color{gray}\itshape,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    showstringspaces=false
+}
 
 % --- FRONTESPIZIO ---
 \title{
@@ -564,7 +578,7 @@ TIPOLOGIA         & R                  & 24               & L             \\ \hl
 In questa fase della progettazione logica, viene valutata l'opportunità di introdurre dati ridondanti all'interno dello schema concettuale. L'obiettivo primario è l'efficientamento delle operazioni di lettura più onerose (identificate nelle OP 9, 11 e 12), bilanciando il risparmio ottenuto con il costo aggiuntivo in termini di complessità nelle operazioni di scrittura e maggiore occupazione di memoria.
 
 \subsection{Ridondanza 1}
-La prima proposta riguarda l'inserimento dell'attributo \textbf{Volume\_Totale} all'interno dell'entità \textbf{SESSIONE}. Questo dato rappresenta il valore aggregato dello stimolo allenante, calcolato come la somma del prodotto ($carico \times ripetizioni$) di tutte le serie associate a quella specifica istanza di allenamento.
+La prima proposta riguarda l'inserimento dell'attributo \textbf{volumeTotale} all'interno dell'entità \textbf{SESSIONE}. Questo dato rappresenta il valore aggregato dello stimolo allenante, calcolato come la somma del prodotto ($carico \times ripetizioni$) di tutte le serie associate a quella specifica istanza di allenamento.
 
 \paragraph{Vantaggi:}
 Questa ridondanza mira a ottimizzare drasticamente le operazioni di analisi statistica, in particolare la \textbf{OP 9} (Volume Mensile) e la \textbf{OP 12} (Report Comparativo). Attualmente, per calcolare il volume di una sessione, il sistema deve accedere ricorsivamente a ogni singola serie tramite la relazione di \textbf{STORICO}. Con l'attributo ridondante, il costo di lettura per ottenere il volume di una sessione crolla da $n$ (numero di serie) a 1.
@@ -583,7 +597,7 @@ OP 4 (Scrittura)    & 5 (2L + 3S)               & 6 (2L + 4S)             & +20\
 OP 9 (Lettura)      & 221 L                     & 121 L                   & -45\% (Risparmio)   \\ \hline
 OP 12 (Lettura)     & 91 L                      & 68 L                    & -25\% (Risparmio)   \\ \hline
 \end{tabular}
-\caption{Confronto costi per la ridondanza dell'attributo Volume\_Totale}
+\caption{Confronto costi per la ridondanza dell'attributo volumeTotale}
 \end{table}
 
 \textbf{Decisione:} La ridondanza viene \textbf{ACCETTATA}. Il risparmio computazionale nelle fasi di analisi mensile (OP 9) e nel confronto volumetrico (OP 12) è superiore al 40\%, giustificando ampiamente il costo marginale di un singolo accesso in scrittura aggiuntivo durante la fase di allenamento.
@@ -661,5 +675,349 @@ Di seguito viene presentato lo schema E-R risultante dalle operazioni di raffina
     \includegraphics[width=1\textwidth]{images/3.5.3_db.png}
     \caption{Schema E-R Ristrutturato dopo l'eliminazione delle gerarchie e l'inserimento delle ridondanze}
 \end{figure}
+
+\section{Traduzione di entità e associazioni in relazioni}
+
+Sulla base dello schema E-R ristrutturato presentato nella Sezione 3.5.3,
+si procede alla traduzione nel modello logico relazionale applicando le
+seguenti regole:
+
+\begin{itemize}
+    \item Ogni \textbf{entità} è tradotta in una relazione con gli stessi
+    attributi; la chiave primaria coincide con l'identificatore principale
+    scelto nella Sezione 3.5.2.
+    \item Gli \textbf{attributi composti} sono suddivisi nelle loro componenti
+    atomiche: l'attributo \textit{datiAnagrafici} di UTENTE è stato decomposto
+    in \textit{nome}, \textit{cognome} e \textit{dataNascita}.
+    \item Le \textbf{associazioni 1:N} sono tradotte inserendo la chiave
+    primaria dell'entità lato ``1'' come chiave esterna nell'entità lato ``N''.
+    \item Le \textbf{associazioni N:M} generano una nuova relazione la cui
+    chiave primaria è composta dalle chiavi esterne delle entità collegate;
+    gli eventuali attributi propri dell'associazione sono inclusi in tale
+    relazione.
+    \item La \textbf{relazione ricorsiva} SUPERVISIONE, con cardinalità
+    (0,N)/(0,1), è tradotta inserendo la chiave del supervisore come
+    attributo opzionale nella stessa tabella UTENTI.
+\end{itemize}
+
+\textit{Nota notazionale: le chiavi primarie sono indicate con la
+\underline{sottolineatura}; l'asterisco (*) indica gli attributi opzionali
+che ammettono valore NULL; i vincoli di chiave esterna sono dichiarati
+esplicitamente sotto ogni relazione.}
+
+\vspace{0.5cm}
+
+\noindent
+\textbf{UTENTI}(\underline{email}, password, dataNascita, nome, cognome,
+TipoUtente, altezza*, pesoIniziale*, obiettivo*, certificazione*,
+specializzazione*, supervisoreEmail*) \\
+\textit{Vincoli FK:} supervisoreEmail $\rightarrow$ UTENTI(email). \\
+\textit{Nota:} A seguito del collasso delle gerarchie ATLETA e COACH
+(Sezione 3.5.1), gli attributi \textit{altezza}, \textit{pesoIniziale}
+e \textit{obiettivo} sono propri degli atleti, mentre
+\textit{certificazione} e \textit{specializzazione} sono propri dei
+coach; entrambi i gruppi ammettono NULL per le istanze dell'altro ruolo.
+L'attributo \textit{supervisoreEmail} traduce la relazione ricorsiva
+SUPERVISIONE ed è valorizzato solo per le istanze con
+\textit{TipoUtente} = `Atleta'.
+
+\vspace{0.3cm}
+\noindent
+\textbf{MISURAZIONI}(\underline{idMisura}, data, valorePeso,
+percentualeGrasso*, fotoPercorso*, utenteEmail) \\
+\textit{Vincoli FK:} utenteEmail $\rightarrow$ UTENTI(email).
+
+\vspace{0.3cm}
+\noindent
+\textbf{ATTREZZATURE}(\underline{idAttrezzo}, nomeAttrezzo, marca*)
+
+\vspace{0.3cm}
+\noindent
+\textbf{GRUPPI\_MUSCOLARI}(\underline{nomeMuscolo})
+
+\vspace{0.3cm}
+\noindent
+\textbf{ESERCIZI}(\underline{nomeEsercizio}, descrizione, tipoEsercizio,
+idAttrezzo*) \\
+\textit{Vincoli FK:} idAttrezzo $\rightarrow$ ATTREZZATURE(idAttrezzo). \\
+\textit{Nota:} L'associazione REQUISITO presenta cardinalità (0,1) lato
+ESERCIZIO; pertanto \textit{idAttrezzo} è opzionale. Un vincolo
+applicativo garantisce che sia valorizzato se e solo se
+\textit{tipoEsercizio} = `Guidato'.
+
+\vspace{0.3cm}
+\noindent
+\textbf{VARIANTI}(\underline{nomeEsercizioBase, nomeEsercizioSostituto}) \\
+\textit{Vincoli FK:} nomeEsercizioBase $\rightarrow$ ESERCIZI(nomeEsercizio);
+nomeEsercizioSostituto $\rightarrow$ ESERCIZI(nomeEsercizio).
+
+\vspace{0.3cm}
+\noindent
+\textbf{COINVOLGIMENTI}(\underline{nomeEsercizio, nomeMuscolo}, ruolo) \\
+\textit{Vincoli FK:} nomeEsercizio $\rightarrow$ ESERCIZI(nomeEsercizio);
+nomeMuscolo $\rightarrow$ GRUPPI\_MUSCOLARI(nomeMuscolo).
+
+\vspace{0.3cm}
+\noindent
+\textbf{SCHEDE}(\underline{idScheda}, nomeScheda, dataCreazione,
+utenteEmail) \\
+\textit{Vincoli FK:} utenteEmail $\rightarrow$ UTENTI(email).
+
+\vspace{0.3cm}
+\noindent
+\textbf{GIORNATE}(\underline{idGiornata}, nomeGiornata, idScheda) \\
+\textit{Vincoli FK:} idScheda $\rightarrow$ SCHEDE(idScheda).
+
+\vspace{0.3cm}
+\noindent
+\textbf{PIANIFICAZIONI}(\underline{idGiornata, nomeEsercizio}, ordine,
+serieTarget, repsTarget) \\
+\textit{Vincoli FK:} idGiornata $\rightarrow$ GIORNATE(idGiornata);
+nomeEsercizio $\rightarrow$ ESERCIZI(nomeEsercizio).
+
+\vspace{0.3cm}
+\noindent
+\textbf{SESSIONI}(\underline{idSessione}, data, durata*, note*,
+volumeTotale*, idGiornata, utenteEmail) \\
+\textit{Vincoli FK:} idGiornata $\rightarrow$ GIORNATE(idGiornata);
+utenteEmail $\rightarrow$ UTENTI(email). \\
+\textit{Nota:} \textit{idGiornata} traduce l'associazione ESECUZIONE
+(0,N)/(1,1); \textit{utenteEmail} traduce la relazione ridondante
+SVOLGIMENTO introdotta nella Sezione 3.4.2. L'attributo
+\textit{volumeTotale} è la ridondanza accettata nella Sezione 3.4.1
+ed è opzionale in quanto valorizzato incrementalmente a ogni
+inserimento di serie.
+
+\vspace{0.3cm}
+\noindent
+\textbf{SERIE}(\underline{idSerie}, ordineEsecuzione, caricoKG, reps,
+isWarmUp, zavorra*, isFailure*, noteWarmUp*, idSessione, nomeEsercizio) \\
+\textit{Vincoli FK:} idSessione $\rightarrow$ SESSIONI(idSessione);
+nomeEsercizio $\rightarrow$ ESERCIZI(nomeEsercizio). \\
+\textit{Nota:} \textit{idSessione} traduce STORICO (0,N)/(1,1);
+\textit{nomeEsercizio} traduce TIPOLOGIA (1,1)/(0,N). Gli attributi
+\textit{zavorra} e \textit{isFailure} sono pertinenti solo ai working
+set; \textit{noteWarmUp} solo alle serie di riscaldamento: ammettono
+NULL in funzione del flag \textit{isWarmUp} (Sezione 3.5.1).
+
+\vspace{0.3cm}
+\noindent
+\textbf{MESSAGGI}(\underline{idMessaggio}, testo, timeStamp,
+autoreEmail, idSessione) \\
+\textit{Vincoli FK:} autoreEmail $\rightarrow$ UTENTI(email);
+idSessione $\rightarrow$ SESSIONI(idSessione).
+
+\vspace{0.5cm}
+\noindent
+Lo schema relazionale ottenuto è in \textbf{Terza Forma Normale (3NF)}: in
+ogni relazione tutti gli attributi non-chiave dipendono funzionalmente dalla
+sola chiave primaria, senza dipendenze transitive tra attributi non-chiave.
+L'unica eccezione intenzionale è \textit{volumeTotale} in SESSIONI,
+mantenuto come ridondanza controllata per motivi prestazionali,
+come documentato nella Sezione 3.4.1.
+
+\section{Schema relazionale finale}
+
+Di seguito viene presentato lo schema relazionale finale, risultato
+della traduzione effettuata nella Sezione 3.6. Il diagramma riporta
+le 13 relazioni ottenute, evidenziando per ciascuna gli attributi,
+le chiavi primarie e i legami di chiave esterna tra le tabelle.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=1\textwidth]{images/3.7_db.png}
+    \caption{Schema relazionale finale con chiavi primarie e vincoli
+    di integrità referenziale}
+\end{figure}
+
+\newpage
+
+\section{Traduzione delle operazioni in query SQL}
+
+Di seguito vengono presentate le query SQL corrispondenti alle 12
+operazioni principali descritte nella Sezione 3.2. Per le operazioni
+che coinvolgono la ridondanza \textit{volumeTotale}, l'aggiornamento
+della tabella SESSIONI è eseguito contestualmente all'inserimento,
+come documentato nella Sezione 3.4.1. Il simbolo \texttt{?} indica
+i parametri forniti a runtime dall'applicazione.
+
+\subsection*{OP 1 – Registrazione di un nuovo profilo atleta}
+
+\begin{lstlisting}[style=sql]
+INSERT INTO UTENTI (email, password, dataNascita, nome, cognome,
+                    TipoUtente, altezza, pesoIniziale, obiettivo)
+VALUES (?, ?, ?, ?, ?, 'Atleta', ?, ?, ?);
+\end{lstlisting}
+
+\subsection*{OP 2 – Creazione di una nuova scheda di allenamento}
+
+L'operazione si articola in tre passi: creazione della scheda,
+delle giornate e della relativa pianificazione degli esercizi.
+
+\begin{lstlisting}[style=sql]
+-- Passo 1: creazione della scheda
+INSERT INTO SCHEDE (nomeScheda, dataCreazione, utenteEmail)
+VALUES (?, CURRENT_DATE, ?);
+
+-- Passo 2: creazione di una giornata (ripetere per ogni giornata)
+INSERT INTO GIORNATE (nomeGiornata, idScheda)
+VALUES (?, LAST_INSERT_ID());
+
+-- Passo 3: inserimento esercizi nella pianificazione
+--          (ripetere per ogni esercizio della giornata)
+INSERT INTO PIANIFICAZIONI (idGiornata, nomeEsercizio,
+                            ordine, serieTarget, repsTarget)
+VALUES (?, ?, ?, ?, ?);
+\end{lstlisting}
+
+\subsection*{OP 3 – Inserimento di una nuova sessione di allenamento}
+
+\begin{lstlisting}[style=sql]
+INSERT INTO SESSIONI (data, durata, note, volumeTotale,
+                      idGiornata, utenteEmail)
+VALUES (CURRENT_DATE, NULL, NULL, 0, ?, ?);
+\end{lstlisting}
+
+\subsection*{OP 4 – Registrazione dei dati di una singola serie}
+
+L'operazione prevede l'inserimento della serie e, se si tratta di
+un working set (\textit{isWarmUp} = FALSE), l'aggiornamento
+contestuale della ridondanza \textit{volumeTotale} in SESSIONI.
+
+\begin{lstlisting}[style=sql]
+-- Passo 1: inserimento della serie
+INSERT INTO SERIE (ordineEsecuzione, caricoKG, reps, isWarmUp,
+                   zavorra, isFailure, noteWarmUp,
+                   idSessione, nomeEsercizio)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Passo 2: aggiornamento volumeTotale (solo se isWarmUp = FALSE)
+UPDATE SESSIONI
+SET volumeTotale = volumeTotale + (? * ?)
+WHERE idSessione = ?;
+\end{lstlisting}
+
+\subsection*{OP 5 – Ricerca del Record Personale (PR) su un esercizio}
+
+\begin{lstlisting}[style=sql]
+SELECT s.caricoKG AS recordPersonale,
+       s.reps,
+       se.data    AS dataSessione
+FROM SERIE s
+JOIN SESSIONI se ON s.idSessione = se.idSessione
+WHERE s.nomeEsercizio = ?
+  AND se.utenteEmail  = ?
+  AND s.isWarmUp      = FALSE
+ORDER BY s.caricoKG DESC, s.reps DESC
+LIMIT 1;
+\end{lstlisting}
+
+\subsection*{OP 6 – Inserimento di una misurazione biometrica periodica}
+
+\begin{lstlisting}[style=sql]
+INSERT INTO MISURAZIONI (data, valorePeso, percentualeGrasso,
+                         fotoPercorso, utenteEmail)
+VALUES (CURRENT_DATE, ?, ?, ?, ?);
+\end{lstlisting}
+
+\subsection*{OP 7 – Invio di un feedback tecnico dal Coach}
+
+\begin{lstlisting}[style=sql]
+INSERT INTO MESSAGGI (testo, timeStamp, autoreEmail, idSessione)
+VALUES (?, CURRENT_TIMESTAMP, ?, ?);
+\end{lstlisting}
+
+\subsection*{OP 8 – Ricerca di esercizi varianti (relazione ricorsiva)}
+
+\begin{lstlisting}[style=sql]
+SELECT e.nomeEsercizio,
+       e.descrizione,
+       e.tipoEsercizio
+FROM VARIANTI v
+JOIN ESERCIZI e ON e.nomeEsercizio = v.nomeEsercizioSostituto
+WHERE v.nomeEsercizioBase = ?;
+\end{lstlisting}
+
+\subsection*{OP 9 – Calcolo del volume totale mensile per gruppo muscolare}
+
+\begin{lstlisting}[style=sql]
+SELECT SUM(s.caricoKG * s.reps) AS volumeTotaleMensile
+FROM SERIE s
+JOIN SESSIONI       se ON se.idSessione   = s.idSessione
+JOIN COINVOLGIMENTI  c ON c.nomeEsercizio = s.nomeEsercizio
+WHERE c.nomeMuscolo   = ?
+  AND se.utenteEmail  = ?
+  AND s.isWarmUp      = FALSE
+  AND se.data        >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH);
+\end{lstlisting}
+
+\subsection*{OP 10 – Verifica attrezzatura necessaria per una giornata}
+
+\begin{lstlisting}[style=sql]
+SELECT DISTINCT a.nomeAttrezzo, a.marca
+FROM PIANIFICAZIONI  p
+JOIN ESERCIZI        e ON e.nomeEsercizio = p.nomeEsercizio
+JOIN ATTREZZATURE    a ON a.idAttrezzo    = e.idAttrezzo
+WHERE p.idGiornata     = ?
+  AND e.tipoEsercizio  = 'Guidato';
+\end{lstlisting}
+
+\subsection*{OP 11 – Dashboard Coach: PR e feedback per gli atleti supervisionati}
+
+L'operazione è suddivisa in due query distinte: la prima recupera
+il record personale per ogni esercizio di ogni atleta supervisionato;
+la seconda elenca i feedback inviati dal coach con il relativo
+contesto di sessione.
+
+\begin{lstlisting}[style=sql]
+-- PR per ogni esercizio di ogni atleta supervisionato
+SELECT u.nome, u.cognome,
+       s.nomeEsercizio,
+       MAX(s.caricoKG) AS recordPersonale,
+       MAX(se.data)    AS dataUltimaEsecuzione
+FROM UTENTI u
+JOIN SESSIONI se ON se.utenteEmail = u.email
+JOIN SERIE    s  ON s.idSessione   = se.idSessione
+WHERE u.supervisoreEmail = ?
+  AND s.isWarmUp         = FALSE
+GROUP BY u.email, u.nome, u.cognome, s.nomeEsercizio
+ORDER BY u.cognome, s.nomeEsercizio;
+
+-- Feedback inviati dal coach con dettaglio sessione
+SELECT u.nome, u.cognome,
+       se.data  AS dataSessione,
+       m.testo,
+       m.timeStamp
+FROM MESSAGGI m
+JOIN SESSIONI se ON se.idSessione = m.idSessione
+JOIN UTENTI   u  ON u.email       = se.utenteEmail
+WHERE m.autoreEmail = ?
+ORDER BY m.timeStamp DESC;
+\end{lstlisting}
+
+\subsection*{OP 12 – Report confronto volume teorico vs volume reale}
+
+La query sfrutta la ridondanza \textit{volumeTotale} per il totale
+complessivo della sessione e calcola il dettaglio per esercizio
+confrontando i target pianificati con le serie effettivamente svolte.
+
+\begin{lstlisting}[style=sql]
+SELECT p.nomeEsercizio,
+       p.serieTarget,
+       p.repsTarget,
+       COUNT(s.idSerie)                      AS serieReali,
+       COALESCE(SUM(s.reps), 0)              AS repsReali,
+       COALESCE(SUM(s.caricoKG * s.reps), 0) AS volumeRealeKg,
+       se.volumeTotale                        AS volumeTotaleSessione
+FROM SESSIONI se
+JOIN PIANIFICAZIONI p ON p.idGiornata    = se.idGiornata
+LEFT JOIN SERIE     s ON s.idSessione    = se.idSessione
+                     AND s.nomeEsercizio = p.nomeEsercizio
+                     AND s.isWarmUp      = FALSE
+WHERE se.idSessione = ?
+GROUP BY p.nomeEsercizio, p.serieTarget,
+         p.repsTarget, se.volumeTotale
+ORDER BY p.nomeEsercizio;
+\end{lstlisting}
 
 \end{document}
