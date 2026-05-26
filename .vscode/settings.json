@@ -1,0 +1,12 @@
+{
+    "java.project.sourcePaths": ["src/main/java"],
+    "java.project.outputPath": "bin",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "latex-workshop.latex.autoBuild.run": "onSave"
+}
