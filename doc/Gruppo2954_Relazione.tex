@@ -10,6 +10,8 @@
 \usepackage{pdflscape}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{tikz}
+\newcommand{\circled}[1]{\tikz[baseline=(c.base)]{\node[shape=circle,draw,inner sep=1pt] (c) {#1};}}
 
 \geometry{a4paper, margin=1in}
 \lstdefinestyle{sql}{
@@ -761,12 +763,19 @@ nomeMuscolo $\rightarrow$ GRUPPI\_MUSCOLARI(nomeMuscolo).
 \noindent
 \textbf{SCHEDE}(\underline{idScheda}, nomeScheda, dataCreazione,
 utenteEmail) \\
-\textit{Vincoli FK:} utenteEmail $\rightarrow$ UTENTI(email).
+\textit{Vincoli FK:} utenteEmail $\rightarrow$ UTENTI(email). \\
+\textit{Vincoli:} UNIQUE(nomeScheda).
 
 \vspace{0.3cm}
 \noindent
-\textbf{GIORNATE}(\underline{idGiornata}, nomeGiornata, idScheda) \\
-\textit{Vincoli FK:} idScheda $\rightarrow$ SCHEDE(idScheda).
+\textbf{GIORNATE}(\underline{idGiornata}, giorno, tipo, idScheda) \\
+\textit{Vincoli FK:} idScheda $\rightarrow$ SCHEDE(idScheda). \\
+\textit{Vincoli:} UNIQUE(idScheda, giorno, tipo). \\
+\textit{Nota:} l'attributo \textit{nomeGiornata} è stato decomposto nei due
+attributi atomici \textit{giorno} (enumerazione Lunedi…Domenica) e
+\textit{tipo} (enumerazione Upper, Lower, Push, Pull, Leg, Full Body, Torso,
+Limbs). Il vincolo di unicità sulla terna impedisce di duplicare la stessa
+combinazione giorno-tipo all'interno della medesima scheda.
 
 \vspace{0.3cm}
 \noindent
@@ -835,11 +844,12 @@ le chiavi primarie e i legami di chiave esterna tra le tabelle.
 \section{Traduzione delle operazioni in query SQL}
 
 Di seguito vengono presentate le query SQL corrispondenti alle 12
-operazioni principali descritte nella Sezione 3.2. Per le operazioni
-che coinvolgono la ridondanza \textit{volumeTotale}, l'aggiornamento
-della tabella SESSIONI è eseguito contestualmente all'inserimento,
-come documentato nella Sezione 3.4.1. Il simbolo \texttt{?} indica
-i parametri forniti a runtime dall'applicazione.
+operazioni principali descritte nella Sezione 3.2. L'aggiornamento
+della ridondanza \textit{volumeTotale} in SESSIONI è gestito
+automaticamente dal trigger \texttt{AggiornaVolumeTotaleSessione}
+definito nello schema fisico, senza richiedere intervento esplicito
+dell'applicazione. Il simbolo \texttt{?} indica i parametri forniti
+a runtime dall'applicazione.
 
 \subsection*{OP 1 – Registrazione di un nuovo profilo atleta}
 
@@ -860,8 +870,8 @@ INSERT INTO SCHEDE (nomeScheda, dataCreazione, utenteEmail)
 VALUES (?, CURRENT_DATE, ?);
 
 -- Passo 2: creazione di una giornata (ripetere per ogni giornata)
-INSERT INTO GIORNATE (nomeGiornata, idScheda)
-VALUES (?, LAST_INSERT_ID());
+INSERT INTO GIORNATE (giorno, tipo, idScheda)
+VALUES (?, ?, ?);
 
 -- Passo 3: inserimento esercizi nella pianificazione
 --          (ripetere per ogni esercizio della giornata)
@@ -880,21 +890,18 @@ VALUES (CURRENT_DATE, NULL, NULL, 0, ?, ?);
 
 \subsection*{OP 4 – Registrazione dei dati di una singola serie}
 
-L'operazione prevede l'inserimento della serie e, se si tratta di
-un working set (\textit{isWarmUp} = FALSE), l'aggiornamento
-contestuale della ridondanza \textit{volumeTotale} in SESSIONI.
+L'operazione prevede esclusivamente l'inserimento della serie nel
+database. L'aggiornamento della ridondanza \textit{volumeTotale}
+nella tabella SESSIONI è delegato al trigger
+\texttt{AggiornaVolumeTotaleSessione}, che si attiva automaticamente
+dopo ogni inserimento di una serie con \textit{isWarmUp} = FALSE,
+garantendo la coerenza del dato senza intervento applicativo.
 
 \begin{lstlisting}[style=sql]
--- Passo 1: inserimento della serie
 INSERT INTO SERIE (ordineEsecuzione, caricoKG, reps, isWarmUp,
                    zavorra, isFailure, noteWarmUp,
                    idSessione, nomeEsercizio)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-
--- Passo 2: aggiornamento volumeTotale (solo se isWarmUp = FALSE)
-UPDATE SESSIONI
-SET volumeTotale = volumeTotale + (? * ?)
-WHERE idSessione = ?;
 \end{lstlisting}
 
 \subsection*{OP 5 – Ricerca del Record Personale (PR) su un esercizio}
@@ -1019,5 +1026,212 @@ GROUP BY p.nomeEsercizio, p.serieTarget,
          p.repsTarget, se.volumeTotale
 ORDER BY p.nomeEsercizio;
 \end{lstlisting}
+
+\chapter{Progettazione dell'applicazione}
+
+L'applicazione che interfaccia la base di dati è sviluppata in \textbf{Java 21}
+con interfaccia grafica \textbf{Swing}, secondo il pattern architetturale
+\textbf{MVC} (Model-View-Controller) affiancato dal pattern \textbf{DAO}
+(Data Access Object) per isolare la logica di persistenza. La build e le
+dipendenze sono gestite con \textbf{Gradle}; la suite di test si appoggia a
+\textbf{JUnit 5}. Il DBMS di riferimento è \textbf{MySQL}, interrogato tramite
+\textbf{JDBC}.
+
+\section{Architettura MVC + DAO}
+L'applicazione è organizzata in tre livelli logici nettamente separati, così
+da ridurre l'accoppiamento tra interfaccia e accesso ai dati e da favorire
+manutenibilità e testabilità.
+
+\begin{itemize}
+    \item \textbf{Model} — logica di accesso ai dati e oggetti di
+    trasferimento. È suddiviso in:
+    \begin{itemize}
+        \item \textbf{DAO} (package \texttt{model.api} e implementazioni): le
+        interfacce \texttt{AuthDAO} e \texttt{WorkoutDAO} dichiarano le
+        operazioni sul database; \texttt{AuthDAOImpl} e \texttt{WorkoutDAOImpl}
+        le implementano via JDBC con \texttt{PreparedStatement}.
+        \item \textbf{DTO} (package \texttt{model.dto}): oggetti immutabili
+        realizzati con i \textit{record} di Java (es. \texttt{UtenteDTO},
+        \texttt{PianificazioneDTO}, \texttt{GiornataDTO},
+        \texttt{SessioneRecenteDTO}), che trasportano i dati dal database alla
+        view senza esporre la struttura delle tabelle.
+        \item \textbf{DatabaseConnection}: gestisce la connessione al DBMS
+        secondo il pattern \textbf{Singleton}.
+    \end{itemize}
+    \item \textbf{Controller} — \texttt{AuthController} e
+    \texttt{WorkoutController} mediano tra view e model: ricevono gli input,
+    invocano i DAO ed elaborano i DTO restituiti tramite \textit{stream},
+    \textit{lambda} e \textit{method reference}, formattandoli per la
+    presentazione.
+    \item \textbf{View} — \texttt{LoginView} e \texttt{MainView} realizzano
+    l'interfaccia Swing. La view non accede mai direttamente al database: ogni
+    operazione passa per il controller.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/4.1_architettura.png}
+    \caption{Architettura a livelli MVC + DAO e flusso dei dati}
+\end{figure}
+
+\section{Tecnologie e pattern utilizzati}
+\begin{itemize}
+    \item \textbf{Pattern DAO}: le interfacce disaccoppiano la logica
+    applicativa dalla specifica tecnologia di persistenza, rendendo il sistema
+    indipendente dal particolare DBMS.
+    \item \textbf{DTO come \textit{record}}: l'immutabilità rende il passaggio
+    dei dati tra i livelli sicuro e conciso; i metodi di utilità dei record
+    (es. \texttt{nomeCompleto()}, \texttt{label()}) centralizzano la
+    formattazione.
+    \item \textbf{Singleton}: \texttt{DatabaseConnection} garantisce un unico
+    punto di accesso condiviso alla connessione.
+    \item \textbf{PreparedStatement}: tutte le query parametriche li
+    utilizzano, a protezione da SQL injection e per una corretta tipizzazione
+    dei parametri.
+    \item \textbf{Trigger}: il calcolo della ridondanza \textit{volumeTotale}
+    (Sezione 3.4.1) è demandato al trigger
+    \texttt{AggiornaVolumeTotaleSessione}, che si attiva dopo l'inserimento di
+    ogni serie allenante mantenendo la coerenza del dato a livello di DBMS.
+    \item \textbf{Programmazione funzionale}: l'elaborazione delle collezioni
+    di DTO (raggruppamenti, mappature, filtri) è realizzata con la Stream API.
+    \item \textbf{Persistenza dell'accesso}: la schermata di login memorizza le
+    credenziali tramite l'API \texttt{Preferences}, consentendo l'accesso
+    automatico nelle sessioni successive.
+\end{itemize}
+
+\section{Guida all'uso: autenticazione}
+All'avvio l'utente seleziona il proprio ruolo (Atleta o Coach). L'accesso
+richiede email e password; per il ruolo Coach è necessario anche un codice
+riservato. La validazione del formato dell'email avviene lato client tramite
+espressione regolare.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{images/4.3_ruolo.png}
+    \caption{Selezione del ruolo all'avvio dell'applicazione}
+\end{figure}
+
+La registrazione di un nuovo profilo (operazione \textbf{OP 1}) avviene tramite
+una finestra di dialogo dedicata. Per ridurre gli errori di inserimento, i
+campi a dominio chiuso sono proposti tramite menù a tendina: data di nascita,
+altezza e peso per l'atleta, con la scelta guidata dell'\textit{obiettivo};
+\textit{certificazione} e \textit{specializzazione} per il coach. I campi
+obbligatori sono contrassegnati da un asterisco.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.50\textwidth]{images/4.3_registrazione.png}
+    \caption{Finestra di registrazione con campi guidati a tendina}
+\end{figure}
+
+\section{Guida all'uso: area Atleta}
+Effettuato l'accesso, l'atleta dispone di un menù laterale con tutte le
+operazioni a lui riservate. Un indicatore in alto a destra mostra in ogni
+momento se è presente una \textbf{sessione attiva}.
+
+\paragraph{La Mia Scheda.} La schermata mostra la scheda assegnata, con gli
+esercizi raggruppati per giornata; accanto a ogni giornata è riportato il
+relativo identificativo (es. \textit{Lunedi — Lower [ID 1]}), così da poterlo
+usare facilmente nelle operazioni successive.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/4.4_scheda.png}
+    \caption{Area Atleta: visualizzazione della scheda con ID delle giornate}
+\end{figure}
+
+\paragraph{Nuova sessione e registrazione serie (OP 3 e OP 4).} L'atleta avvia
+una sessione indicando l'ID della giornata da svolgere. All'avvio
+l'applicazione attiva la sessione (evidenziata nell'intestazione) e passa
+automaticamente alla registrazione delle serie, dove la tendina degli esercizi
+è già pre-impostata con i soli esercizi di quella giornata, nell'ordine
+previsto. Per ogni serie si registrano carico, ripetizioni e ordine;
+l'aggiornamento del volume totale è gestito dal trigger.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/4.4_sessione_serie.png}
+    \caption{Area Atleta: registrazione di una serie nella sessione attiva}
+\end{figure}
+
+\paragraph{Consultazione e analisi.} L'atleta dispone inoltre delle operazioni
+di consultazione: ricerca del record personale su un esercizio (\textbf{OP 5}),
+inserimento di una misurazione biometrica (\textbf{OP 6}), ricerca delle
+varianti di un esercizio (\textbf{OP 8}), calcolo del volume mensile per gruppo
+muscolare (\textbf{OP 9}), verifica dell'attrezzatura necessaria per una
+giornata (\textbf{OP 10}) e generazione del report di confronto tra volume
+teorico e reale di una sessione (\textbf{OP 12}). L'esito di ogni operazione è
+mostrato in un riquadro dedicato, con codifica cromatica (verde per i successi,
+rosso per gli errori).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{images/4.4_report.png}
+    \caption{Area Atleta: report di confronto volume teorico/reale (OP 12)}
+\end{figure}
+
+\section{Guida all'uso: area Coach}
+Il coach dispone di un menù dedicato alle funzioni di supervisione.
+
+\paragraph{I Miei Atleti.} Elenca gli atleti supervisionati (quelli il cui
+\textit{supervisoreEmail} coincide con il coach), con email e obiettivo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{images/4.5_atleti.png}
+    \caption{Area Coach: elenco degli atleti supervisionati}
+\end{figure}
+
+\paragraph{Creazione di una scheda (OP 2).} La creazione è \textbf{incrementale}
+e suddivisa in quattro sezioni: \circled{1} creazione della scheda (nome
+univoco ed email dell'atleta); \circled{2} aggiunta di una giornata
+specificandone \textit{giorno} e \textit{tipo} (max 5 giornate); \circled{3}
+aggiunta degli esercizi alla giornata (max 6), con l'ordine che si incrementa
+automaticamente; \circled{4} possibilità di riprendere una giornata esistente
+tramite il suo ID per modificarla. La tendina degli esercizi è \textbf{filtrata
+in base al tipo di giornata} (es. una giornata \textit{Push} propone solo
+esercizi di spinta, una \textit{Leg} solo esercizi per le gambe). Un'anteprima
+aggiornata in tempo reale mostra il contenuto della scheda durante la
+costruzione.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/4.5_crea_scheda.png}
+    \caption{Area Coach: creazione incrementale di una scheda con anteprima}
+\end{figure}
+
+\paragraph{Invio di feedback (OP 7).} Il coach seleziona un proprio atleta da
+una tendina e, di conseguenza, una delle sue sessioni (mostrata con data e
+volume) da una seconda tendina che si popola automaticamente; scrive quindi il
+testo del feedback. In questo modo l'invio non richiede l'inserimento manuale
+di alcun identificativo numerico.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/4.5_feedback.png}
+    \caption{Area Coach: invio di un feedback selezionando atleta e sessione}
+\end{figure}
+
+\paragraph{Dashboard (OP 11).} Riepiloga, per tutti gli atleti supervisionati,
+i record personali e l'elenco delle sessioni recenti con i relativi
+identificativi, utili come riferimento per il feedback.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/4.5_dashboard.png}
+    \caption{Area Coach: dashboard riepilogativa degli atleti}
+\end{figure}
+
+\section{Testing}
+La correttezza dell'accesso ai dati è verificata da una suite di \textbf{test
+di integrazione} con \textbf{JUnit 5}, eseguiti su un'istanza reale del
+database popolata con i dati di esempio. I test, raccolti in
+\texttt{AuthDAOTest} e \texttt{WorkoutDAOTest}, coprono tutte le operazioni dei
+DAO (autenticazione, creazione incrementale della scheda, registrazione di
+sessioni e serie, record personali, volumi, varianti, attrezzatura, feedback)
+verificando sia i casi positivi sia i casi limite: input inesistenti,
+violazione dei vincoli UNIQUE, liste vuote. Per garantire la ripetibilità, i
+test che modificano lo stato creano dati con identificativi univoci a ogni
+esecuzione.
 
 \end{document}
