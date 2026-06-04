@@ -1,5 +1,6 @@
 -- Creazione e selezione del database
-CREATE DATABASE IF NOT EXISTS WorkoutDB;
+DROP DATABASE IF EXISTS WorkoutDB;
+CREATE DATABASE WorkoutDB;
 USE WorkoutDB;
 
 -- 1. UTENTI
@@ -76,7 +77,7 @@ CREATE TABLE COINVOLGIMENTI (
 -- 8. SCHEDE
 CREATE TABLE SCHEDE (
     idScheda INT AUTO_INCREMENT PRIMARY KEY,
-    nomeScheda VARCHAR(100) NOT NULL,
+    nomeScheda VARCHAR(100) NOT NULL UNIQUE,
     dataCreazione DATE NOT NULL,
     utenteEmail VARCHAR(100) NOT NULL,
     FOREIGN KEY (utenteEmail) REFERENCES UTENTI(email) ON DELETE CASCADE
@@ -85,8 +86,12 @@ CREATE TABLE SCHEDE (
 -- 9. GIORNATE
 CREATE TABLE GIORNATE (
     idGiornata INT AUTO_INCREMENT PRIMARY KEY,
-    nomeGiornata VARCHAR(100) NOT NULL,
+    giorno ENUM('Lunedi','Martedi','Mercoledi','Giovedi',
+                'Venerdi','Sabato','Domenica') NOT NULL,
+    tipo ENUM('Upper','Lower','Push','Pull',
+              'Leg','Full Body','Torso','Limbs') NOT NULL,
     idScheda INT NOT NULL,
+    UNIQUE(idScheda, giorno, tipo),
     FOREIGN KEY (idScheda) REFERENCES SCHEDE(idScheda) ON DELETE CASCADE
 );
 
