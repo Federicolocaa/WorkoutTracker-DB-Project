@@ -48,6 +48,10 @@ INSERT INTO ATTREZZATURE (nomeAttrezzo, marca) VALUES
     ('Chest Press Guidata',    'Panatta');     -- id 6
 INSERT INTO ATTREZZATURE (nomeAttrezzo, marca) VALUES
     ('Macchina Leg Curl/Ext', 'Panatta');      -- id 7
+INSERT INTO ATTREZZATURE (nomeAttrezzo, marca) VALUES
+    ('Shoulder Press', 'Panatta'),      -- id 8
+    ('Pectoral Machine', 'Technogym'),  -- id 9
+    ('Adductor Machine', 'Panatta');    -- id 10
 
 -- ==============================================================================
 -- GRUPPI MUSCOLARI
@@ -119,6 +123,7 @@ INSERT INTO ESERCIZI (nomeEsercizio, descrizione, tipoEsercizio, idAttrezzo) VAL
      'Guidato', 6);
 
 INSERT INTO ESERCIZI (nomeEsercizio, descrizione, tipoEsercizio, idAttrezzo) VALUES
+
      ('Dips',
      'Piegamenti alle parallele per petto basso e tricipiti.',
      'Libero', NULL),
@@ -162,6 +167,24 @@ INSERT INTO ESERCIZI (nomeEsercizio, descrizione, tipoEsercizio, idAttrezzo) VAL
     ('Hip Thrust',
      'Spinta dell\'anca con bilanciere per i glutei.',
      'Libero', 1);
+
+INSERT INTO ESERCIZI (nomeEsercizio, descrizione, tipoEsercizio, idAttrezzo) VALUES
+    ('Incline Chest Press',  'Spinta su panca inclinata alla multipower.', 'Guidato', 6),
+    ('Prone Lat Machine',    'Tirata dorsale prona alla lat machine.',     'Guidato', 2),
+    ('Shoulder Press Panatta','Lento avanti guidato per le spalle.',       'Guidato', 8),
+    ('Prone Low-Pulley',     'Rematore prono al pulley basso.',            'Guidato', 4),
+    ('Cable Lateral Raise',  'Alzate laterali ai cavi.',                   'Guidato', 4),
+    ('Pec Fly Machine',      'Croci alla pectoral machine.',               'Guidato', 9),
+    ('Mono Rear Delt',       'Rear delt monolaterale alla macchina.',      'Guidato', 9),
+    ('Adductor Machine',     'Macchina adduttori.',                        'Guidato', 10),
+    ('Preacher Curl Cable',  'Curl su panca Scott ai cavi.',               'Guidato', 4),
+    ('Hammer Curl',          'Curl a martello al cavo basso.',             'Guidato', 4),
+    ('Wrist Curl',           'Curl ai polsi per gli avambracci.',          'Libero',  3),
+    ('T-Bar Row',            'Rematore a T con bilanciere.',               'Libero',  1),
+    ('High Row',             'Rematore alto guidato.',                     'Guidato', 2),
+    ('Low-High Cable Fly',   'Croci ai cavi dal basso verso l''alto.',     'Guidato', 4),
+    ('Hack Squat',           'Squat alla hack machine.',                   'Guidato', 5),
+    ('French Press',         'Estensioni tricipiti con bilanciere EZ.',    'Libero',  1);
 
 -- ==============================================================================
 -- COINVOLGIMENTI
@@ -240,6 +263,35 @@ INSERT INTO COINVOLGIMENTI (nomeEsercizio, nomeMuscolo, ruolo) VALUES
 
     ('Hip Thrust',       'Glutei',     'Primario'),
     ('Hip Thrust',       'Gambe',      'Secondario');
+
+INSERT INTO COINVOLGIMENTI (nomeEsercizio, nomeMuscolo, ruolo) VALUES
+
+    ('Incline Chest Press',   'Petto',      'Primario'),
+    ('Incline Chest Press',   'Spalle',     'Secondario'),
+    ('Incline Chest Press',   'Tricipiti',  'Secondario'),
+    ('Prone Lat Machine',     'Dorso',      'Primario'),
+    ('Prone Lat Machine',     'Bicipiti',   'Secondario'),
+    ('Shoulder Press Panatta','Spalle',     'Primario'),
+    ('Shoulder Press Panatta','Tricipiti',  'Secondario'),
+    ('Prone Low-Pulley',      'Dorso',      'Primario'),
+    ('Prone Low-Pulley',      'Bicipiti',   'Secondario'),
+    ('Cable Lateral Raise',   'Spalle',     'Primario'),
+    ('Pec Fly Machine',       'Petto',      'Primario'),
+    ('Mono Rear Delt',        'Spalle',     'Primario'),
+    ('Mono Rear Delt',        'Trapezio',   'Secondario'),
+    ('Adductor Machine',      'Gambe',      'Primario'),
+    ('Preacher Curl Cable',   'Bicipiti',   'Primario'),
+    ('Hammer Curl',           'Bicipiti',   'Primario'),
+    ('Wrist Curl',            'Bicipiti',   'Primario'),
+    ('T-Bar Row',             'Dorso',      'Primario'),
+    ('T-Bar Row',             'Bicipiti',   'Secondario'),
+    ('T-Bar Row',             'Trapezio',   'Secondario'),
+    ('High Row',              'Dorso',      'Primario'),
+    ('High Row',              'Bicipiti',   'Secondario'),
+    ('Low-High Cable Fly',    'Petto',      'Primario'),
+    ('Hack Squat',            'Gambe',      'Primario'),
+    ('Hack Squat',            'Glutei',     'Secondario'),
+    ('French Press',          'Tricipiti',  'Primario');
 
 -- ==============================================================================
 -- VARIANTI

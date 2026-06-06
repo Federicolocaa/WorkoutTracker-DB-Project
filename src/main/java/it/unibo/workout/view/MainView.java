@@ -49,26 +49,42 @@ public class MainView {
     "Panca Piana",
     "Spinte con Manubri",
     "Chest Press Guidata",
+    "Incline Chest Press",
     "Croci con Manubri",
+    "Pec Fly Machine",
     "Cable Crossover",
+    "Low-High Cable Fly",
     "Dips",
     "Military Press",
+    "Shoulder Press Panatta",
     "Alzate Laterali",
+    "Cable Lateral Raise",
+    "Tricep Pushdown",
+    "French Press",
     "Stacco da Terra",
     "Rematore con Bilanciere",
+    "T-Bar Row",
+    "High Row",
     "Lat Pulldown",
+    "Prone Lat Machine",
     "Pulley Basso",
+    "Prone Low-Pulley",
     "Trazioni",
     "Face Pull",
+    "Mono Rear Delt",
     "Curl con Bilanciere",
     "Curl con Manubri",
-    "Tricep Pushdown",
+    "Preacher Curl Cable",
+    "Hammer Curl",
+    "Wrist Curl",
     "Squat",
+    "Hack Squat",
     "Leg Press",
     "Romanian Deadlift",
     "Affondi",
     "Leg Curl",
     "Leg Extension",
+    "Adductor Machine",
     "Hip Thrust",
     "Calf Raise"
   };
@@ -81,62 +97,54 @@ public class MainView {
       Map.of(
           "Push",
           new String[] {
-            "Panca Piana",
-            "Spinte con Manubri",
-            "Chest Press Guidata",
-            "Croci con Manubri",
-            "Cable Crossover",
-            "Dips",
-            "Military Press",
-            "Alzate Laterali",
-            "Tricep Pushdown"
+            "Panca Piana", "Spinte con Manubri", "Chest Press Guidata", "Incline Chest Press",
+            "Croci con Manubri", "Pec Fly Machine", "Cable Crossover", "Low-High Cable Fly",
+            "Dips", "Military Press", "Shoulder Press Panatta", "Alzate Laterali",
+            "Cable Lateral Raise", "Tricep Pushdown", "French Press"
           },
           "Pull",
           new String[] {
-            "Stacco da Terra", "Rematore con Bilanciere", "Lat Pulldown", "Pulley Basso",
-            "Trazioni", "Face Pull", "Curl con Bilanciere", "Curl con Manubri"
+            "Stacco da Terra", "Rematore con Bilanciere", "T-Bar Row", "High Row",
+            "Lat Pulldown", "Prone Lat Machine", "Pulley Basso", "Prone Low-Pulley",
+            "Trazioni", "Face Pull", "Mono Rear Delt", "Curl con Bilanciere",
+            "Curl con Manubri", "Preacher Curl Cable", "Hammer Curl"
           },
           "Leg",
           new String[] {
-            "Squat", "Leg Press", "Romanian Deadlift", "Affondi",
-            "Leg Curl", "Leg Extension", "Hip Thrust", "Calf Raise"
+            "Squat", "Hack Squat", "Leg Press", "Romanian Deadlift", "Affondi",
+            "Leg Curl", "Leg Extension", "Adductor Machine", "Hip Thrust", "Calf Raise"
           },
           "Lower",
           new String[] {
-            "Squat", "Leg Press", "Romanian Deadlift", "Affondi",
-            "Leg Curl", "Leg Extension", "Hip Thrust", "Calf Raise"
+            "Squat", "Hack Squat", "Leg Press", "Romanian Deadlift", "Affondi",
+            "Leg Curl", "Leg Extension", "Adductor Machine", "Hip Thrust", "Calf Raise"
           },
           "Upper",
           new String[] {
-            "Panca Piana",
-            "Spinte con Manubri",
-            "Chest Press Guidata",
-            "Croci con Manubri",
-            "Cable Crossover",
-            "Dips",
-            "Military Press",
-            "Alzate Laterali",
-            "Tricep Pushdown",
-            "Stacco da Terra",
-            "Rematore con Bilanciere",
-            "Lat Pulldown",
-            "Pulley Basso",
-            "Trazioni",
-            "Face Pull",
-            "Curl con Bilanciere",
-            "Curl con Manubri"
+            "Panca Piana", "Spinte con Manubri", "Chest Press Guidata", "Incline Chest Press",
+            "Croci con Manubri", "Pec Fly Machine", "Cable Crossover", "Low-High Cable Fly",
+            "Dips", "Military Press", "Shoulder Press Panatta", "Alzate Laterali",
+            "Cable Lateral Raise", "Tricep Pushdown", "French Press", "Stacco da Terra",
+            "Rematore con Bilanciere", "T-Bar Row", "High Row", "Lat Pulldown",
+            "Prone Lat Machine", "Pulley Basso", "Prone Low-Pulley", "Trazioni",
+            "Face Pull", "Mono Rear Delt", "Curl con Bilanciere", "Curl con Manubri",
+            "Preacher Curl Cable", "Hammer Curl", "Wrist Curl"
           },
           "Torso",
           new String[] {
-            "Panca Piana", "Spinte con Manubri", "Chest Press Guidata", "Croci con Manubri",
-            "Cable Crossover", "Dips", "Military Press", "Alzate Laterali",
-            "Stacco da Terra", "Rematore con Bilanciere", "Lat Pulldown", "Pulley Basso",
-            "Trazioni", "Face Pull"
+            "Panca Piana", "Spinte con Manubri", "Chest Press Guidata", "Incline Chest Press",
+            "Croci con Manubri", "Pec Fly Machine", "Cable Crossover", "Low-High Cable Fly",
+            "Dips", "Military Press", "Shoulder Press Panatta", "Alzate Laterali",
+            "Cable Lateral Raise", "Stacco da Terra", "Rematore con Bilanciere", "T-Bar Row",
+            "High Row", "Lat Pulldown", "Prone Lat Machine", "Pulley Basso",
+            "Prone Low-Pulley", "Trazioni", "Face Pull", "Mono Rear Delt"
           },
           "Limbs",
           new String[] {
-            "Curl con Bilanciere", "Curl con Manubri", "Tricep Pushdown", "Dips",
-            "Leg Curl", "Leg Extension", "Calf Raise", "Affondi"
+            "Curl con Bilanciere", "Curl con Manubri", "Preacher Curl Cable", "Hammer Curl",
+            "Wrist Curl", "Tricep Pushdown", "French Press", "Dips",
+            "Leg Curl", "Leg Extension", "Calf Raise", "Affondi",
+            "Hack Squat", "Adductor Machine"
           },
           "Full Body",
           ESERCIZI_DB);
@@ -829,9 +837,8 @@ public class MainView {
     JPanel form = new JPanel(new GridBagLayout());
     var g = defaultGBC();
     cmbEsercOP4 = addComboField(form, g, 0, "Esercizio", ESERCIZI_DB, false);
-    var cmbOrdine = addComboField(form, g, 1, "Ordine", num1to20, false);
-    var cmbCarico = addComboField(form, g, 2, "Carico (kg)", carichi, true);
-    var cmbReps = addComboField(form, g, 3, "Reps", num1to20, false);
+    var cmbCarico = addComboField(form, g, 1, "Carico (kg)", carichi, true);
+    var cmbReps = addComboField(form, g, 2, "Reps", num1to20, false);
 
     JButton btn =
         StyleUtil.createRoundedButton("Registra Serie", StyleUtil.YELLOW_ACC, StyleUtil.BG_DARK);
@@ -844,14 +851,9 @@ public class MainView {
           Double carico = parseDoubleOrError(cmbCarico.getSelectedItem().toString(), "Carico");
           if (carico == null) return;
           showResult(
-              controller.registraSerie(
-                  Integer.parseInt(cmbOrdine.getSelectedItem().toString()),
+              controller.registraSerieWorkingSet(
                   carico,
                   Integer.parseInt(cmbReps.getSelectedItem().toString()),
-                  false,
-                  null,
-                  false,
-                  "",
                   idSessioneAttiva,
                   cmbEsercOP4.getSelectedItem().toString()));
         });
@@ -859,8 +861,8 @@ public class MainView {
         "OP 4 — Registra Serie",
         form,
         btn,
-        "Registra le serie della sessione in corso (indicata in alto a destra). L'ID sessione"
-            + " è gestito in automatico.");
+        "Registra una serie alla volta: il numero si incrementa da solo. "
+            + "Per fare 3 set, premi \"Registra Serie\" 3 volte.");
   }
 
   // ===========================================================================
