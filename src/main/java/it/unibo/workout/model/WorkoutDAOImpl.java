@@ -369,6 +369,24 @@ public class WorkoutDAOImpl implements WorkoutDAO {
     }
   }
 
+  @Override
+  public int prossimoOrdineSerie(int idSessione, String nomeEsercizio) {
+    final String query =
+        "SELECT COALESCE(MAX(ordineEsecuzione), 0) + 1 "
+            + "FROM SERIE WHERE idSessione = ? AND nomeEsercizio = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query)) {
+      ps.setInt(1, idSessione);
+      ps.setString(2, nomeEsercizio);
+      try (ResultSet rs = ps.executeQuery()) {
+        return rs.next() ? rs.getInt(1) : 1;
+      }
+    } catch (SQLException e) {
+      System.err.println("Errore prossimoOrdineSerie: " + e.getMessage());
+      return 1;
+    }
+  }
+
   // =========================================================================
   // OP 5 — Record Personale
   // =========================================================================
@@ -699,5 +717,20 @@ public class WorkoutDAOImpl implements WorkoutDAO {
       System.err.println("Errore OP 12: " + e.getMessage());
     }
     return result;
+  }
+
+  @Override
+  public boolean assegnaSupervisore(String atletaEmail, String coachEmail) {
+    final String query =
+        "UPDATE UTENTI SET supervisoreEmail = ? " + "WHERE email = ? AND tipoUtente = 'Atleta'";
+    try (Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query)) {
+      ps.setString(1, coachEmail);
+      ps.setString(2, atletaEmail);
+      return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Errore assegnaSupervisore: " + e.getMessage());
+      return false;
+    }
   }
 }

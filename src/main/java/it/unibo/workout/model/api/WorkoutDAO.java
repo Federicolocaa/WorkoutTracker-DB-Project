@@ -81,6 +81,9 @@ public interface WorkoutDAO {
       int idSessione,
       String nomeEsercizio);
 
+  /** Prossimo numero di serie per un esercizio nella sessione (1, 2, 3...). */
+  int prossimoOrdineSerie(int idSessione, String nomeEsercizio);
+
   /** OP 6 — Inserisce una misurazione biometrica periodica. */
   boolean inserisciMisurazione(double valorePeso, Double percentualeGrasso, String utenteEmail);
 
@@ -117,4 +120,7 @@ public interface WorkoutDAO {
 
   /** OP 12 — Report confronto volume teorico vs reale per una sessione. */
   List<ReportVolumeDTO> getReportVolume(int idSessione);
+
+  /** Imposta il coach come supervisore dell'atleta (collega l'atleta al coach). */
+  boolean assegnaSupervisore(String atletaEmail, String coachEmail);
 }

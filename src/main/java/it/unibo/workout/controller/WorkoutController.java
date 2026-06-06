@@ -45,12 +45,13 @@ public class WorkoutController {
         .map(
             id -> {
               idSchedaInProgress = id;
+              dao.assegnaSupervisore(atletaEmail, utenteCorrente.email());
               return "[OK] Scheda \""
                   + nomeScheda
                   + "\" creata (ID: "
                   + id
                   + ")."
-                  + "\nOra aggiungi le giornate.";
+                  + "\nL'atleta è ora tra i tuoi atleti. Ora aggiungi le giornate.";
             })
         .orElse("[ERRORE] Impossibile creare la scheda.");
   }
@@ -193,6 +194,26 @@ public class WorkoutController {
     return ok
         ? "[OK] Serie di " + tipo + " registrata (%.2f kg × %d reps).".formatted(caricoKG, reps)
         : "[ERRORE] Registrazione serie fallita.";
+  }
+
+  /** Registra un working set calcolando da solo il numero di serie. */
+  public String registraSerieWorkingSet(
+      double carico, int reps, int idSessione, String nomeEsercizio) {
+    int ordine = dao.prossimoOrdineSerie(idSessione, nomeEsercizio);
+    boolean ok =
+        dao.registraSerie(
+            ordine, carico, reps, false, null, false, null, idSessione, nomeEsercizio);
+    return ok
+        ? "[OK] "
+            + nomeEsercizio
+            + " — serie #"
+            + ordine
+            + " registrata ("
+            + carico
+            + "kg × "
+            + reps
+            + ")."
+        : "[ERRORE] Impossibile registrare la serie.";
   }
 
   // =========================================================================
