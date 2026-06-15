@@ -77,5 +77,9 @@ CREDENZIALI DI ESEMPIO
 
 All'avvio si seleziona il ruolo (Atleta o Coach) e si accede con email
 e password. E' possibile registrare nuovi profili dalla schermata di
-login.
+login che si aggiungeranno man mano in automatico al DB.
+
+CODICE SEGRETO COACH
+--------------------
+Per accedere o registrarsi come Coach e' richiesto il codice: 020405
 ============================================================
