@@ -689,8 +689,8 @@ seguenti regole:
     attributi; la chiave primaria coincide con l'identificatore principale
     scelto nella Sezione 3.5.2.
     \item Gli \textbf{attributi composti} sono suddivisi nelle loro componenti
-    atomiche: l'attributo \textit{datiAnagrafici} di UTENTE è stato decomposto
-    in \textit{nome}, \textit{cognome} e \textit{dataNascita}.
+    atomiche: l'attributo composto \textit{datiAnagrafici} di UTENTE è stato suddiviso
+    in \textit{nome}, \textit{cognome} (\textit{dataNascita} è già un attributo atomico distinto).
     \item Le \textbf{associazioni 1:N} sono tradotte inserendo la chiave
     primaria dell'entità lato ``1'' come chiave esterna nell'entità lato ``N''.
     \item Le \textbf{associazioni N:M} generano una nuova relazione la cui
@@ -771,11 +771,11 @@ utenteEmail) \\
 \textbf{GIORNATE}(\underline{idGiornata}, giorno, tipo, idScheda) \\
 \textit{Vincoli FK:} idScheda $\rightarrow$ SCHEDE(idScheda). \\
 \textit{Vincoli:} UNIQUE(idScheda, giorno, tipo). \\
-\textit{Nota:} l'attributo \textit{nomeGiornata} è stato decomposto nei due
-attributi atomici \textit{giorno} (enumerazione Lunedi…Domenica) e
-\textit{tipo} (enumerazione Upper, Lower, Push, Pull, Leg, Full Body, Torso,
-Limbs). Il vincolo di unicità sulla terna impedisce di duplicare la stessa
-combinazione giorno-tipo all'interno della medesima scheda.
+\textit{Nota:} in fase di traduzione l'attributo \textit{nomeGiornata} dello schema 
+concettuale è stato raffinato e sostituito dai due attributi atomici \textit{giorno}
+(enumerazione Lunedi…Domenica) e \textit{tipo} (enumerazione Upper, Lower, Push, Pull, Leg, Full Body, Torso, Limbs), 
+che insieme identificano in modo più strutturato la giornata. Il vincolo di unicità sulla terna 
+(idScheda, giorno, tipo) impedisce di duplicare la stessa combinazione giorno-tipo all'interno della medesima scheda.
 
 \vspace{0.3cm}
 \noindent
